@@ -1,0 +1,10 @@
+node_modules/
+backend/data/pglite/
+backend/data/translation-models/
+.env
+dist/
+*.log
+logs/
+pgdata/
+redisdata/
+.DS_Store

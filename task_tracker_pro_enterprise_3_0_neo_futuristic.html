@@ -1,0 +1,2863 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker Pro Enterprise 3.0 - Neo-Futuristic 3D Glassmorphism</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts (Cairo & Orbitron) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Cairo', 'sans-serif'],
+                        mono: ['Orbitron', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            50: '#e0f2fe',
+                            400: '#38bdf8',
+                            500: '#06b6d4',
+                            600: '#0284c7',
+                            900: '#0f172a',
+                            neon: '#00f0ff',
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            gold: '#f59e0b',
+                            emerald: '#10b981'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --neon-glow-cyan: rgba(6, 182, 212, 0.4);
+            --neon-glow-purple: rgba(168, 85, 247, 0.4);
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #030712;
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+
+        /* Animated Glowing Orbs Background */
+        .cyber-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.35;
+            animation: orbFloat 18s ease-in-out infinite alternate;
+        }
+        .orb-1 { width: 450px; height: 450px; background: #06b6d4; top: -10%; right: -5%; animation-delay: 0s; }
+        .orb-2 { width: 500px; height: 500px; background: #a855f7; bottom: -10%; left: -5%; animation-delay: -5s; }
+        .orb-3 { width: 350px; height: 350px; background: #ec4899; top: 40%; left: 30%; animation-delay: -10s; }
+
+        @keyframes orbFloat {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, 40px) scale(1.15); }
+            100% { transform: translate(-40px, 80px) scale(0.9); }
+        }
+
+        /* Cyber Grid lines background overlay */
+        .cyber-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(56, 189, 248, 0.3); border-radius: 9999px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(56, 189, 248, 0.6); }
+
+        /* Neo-Futuristic 3D Glassmorphism Cards */
+        .glass-3d {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7),
+                        inset 0 1px 1px 0 rgba(255, 255, 255, 0.15);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-3d-hover:hover {
+            border-color: rgba(6, 182, 212, 0.4);
+            box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.25),
+                        0 0 20px 2px rgba(6, 182, 212, 0.2),
+                        inset 0 1px 2px 0 rgba(255, 255, 255, 0.3);
+            transform: translateY(-6px) rotateX(2deg) rotateY(-1deg);
+        }
+
+        /* 3D Neumorphic Icon Container */
+        .icon-3d-wrapper {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+        .icon-3d-wrapper:hover {
+            transform: translateZ(15px) scale(1.1);
+        }
+        .icon-3d-glow {
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            filter: blur(12px);
+            opacity: 0.6;
+            z-index: -1;
+        }
+
+        /* Kanban Physics Drag & Drop Effects */
+        .kanban-col.drag-over {
+            background-color: rgba(6, 182, 212, 0.15) !important;
+            border-color: #06b6d4 !important;
+            box-shadow: 0 0 30px rgba(6, 182, 212, 0.4) inset !important;
+        }
+        .kanban-board {
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(290px, 350px);
+            grid-template-columns: none;
+            align-items: start;
+            overflow-x: auto;
+            padding: 1.25rem 0.75rem 2rem;
+            scroll-snap-type: x proximity;
+        }
+        .kanban-col {
+            min-height: 470px;
+            max-height: 76vh;
+            scroll-snap-align: start;
+            background: linear-gradient(160deg, rgba(30, 41, 59, 0.8), rgba(8, 15, 30, 0.84));
+            border-color: rgba(148, 163, 184, 0.24);
+            box-shadow: 0 28px 60px -28px rgba(0, 0, 0, 0.95), 0 12px 28px -16px rgba(6, 182, 212, 0.28), inset 0 1px rgba(255, 255, 255, 0.14);
+            transform: translateY(-3px);
+        }
+        .kanban-card-list {
+            min-height: 280px;
+            max-height: calc(76vh - 96px);
+            overflow-y: auto;
+        }
+        .kanban-card {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(9, 16, 31, 0.96));
+            border-color: rgba(148, 163, 184, 0.2);
+            box-shadow: 0 12px 26px -18px rgba(0, 0, 0, 0.95), inset 0 1px rgba(255, 255, 255, 0.08);
+            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .kanban-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(34, 211, 238, 0.55);
+            box-shadow: 0 18px 34px -18px rgba(6, 182, 212, 0.35), 0 10px 24px -16px rgba(0, 0, 0, 0.95);
+        }
+        .kanban-card.dragging {
+            opacity: 0.3;
+            transform: scale(0.95) rotate(-2deg);
+        }
+        .notification-panel {
+            position: absolute;
+            inset-inline-end: 0;
+            top: calc(100% + 0.75rem);
+            width: min(370px, calc(100vw - 2rem));
+            max-height: min(70vh, 540px);
+            z-index: 40;
+            overflow: hidden;
+            box-shadow: 0 24px 70px -24px rgba(0, 0, 0, 0.95), 0 0 28px rgba(6, 182, 212, 0.12);
+        }
+        .notification-list { max-height: min(54vh, 410px); overflow-y: auto; }
+        @media (max-width: 640px) {
+            .kanban-board { grid-auto-columns: minmax(82vw, 1fr); }
+            .kanban-col { min-height: 420px; max-height: 70vh; }
+            .kanban-card-list { max-height: calc(70vh - 96px); }
+            .notification-panel {
+                position: fixed;
+                top: 4.5rem;
+                right: 1rem;
+                left: auto;
+                width: min(370px, calc(100vw - 2rem));
+            }
+        }
+
+        /* Floating Glass Toast System */
+        .toast-enter { animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .toast-exit { animation: toastSlideOut 0.3s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards; }
+        @keyframes toastSlideIn {
+            from { transform: translateX(-120%) scale(0.8); opacity: 0; }
+            to { transform: translateX(0) scale(1); opacity: 1; }
+        }
+        @keyframes toastSlideOut {
+            from { transform: translateX(0) scale(1); opacity: 1; }
+            to { transform: translateX(-120%) scale(0.8); opacity: 0; }
+        }
+
+        /* Hologram Shimmer Effect */
+        .hologram-shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 4s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .financial-report-table { width: 100%; border-collapse: collapse; color: #0f172a; }
+        .financial-report-table th, .financial-report-table td { border: 1px solid #dbe3eb; padding: 8px; text-align: right; color: #0f172a; }
+        .financial-report-table td.text-emerald-700 { color: #047857; }
+        .financial-report-table td.text-rose-700 { color: #be123c; }
+        .financial-report-table thead { background: #f1f5f9; }
+        .financial-report-table tbody tr:nth-child(even) { background: #f8fafc; }
+        .financial-report-page-break { break-before: page; page-break-before: always; }
+
+        @media print {
+            @page { size: A4 portrait; margin: 12mm; }
+            body { display: block !important; min-height: 0 !important; overflow: visible !important; background: #fff !important; }
+            body > * { display: none !important; }
+            #financial-report-overlay {
+                display: block !important;
+                position: static !important;
+                inset: auto !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                background: #fff !important;
+                color: #0f172a !important;
+            }
+            #financial-report-dialog {
+                width: 100% !important;
+                max-width: none !important;
+                max-height: none !important;
+                overflow: visible !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                border: 0 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                background: #fff !important;
+                color: #0f172a !important;
+            }
+            #financial-report-paper, #financial-report-paper * { color: #0f172a !important; }
+            #financial-report-paper { background: #fff !important; border: 0 !important; padding: 0 !important; }
+            #financial-report-paper .report-metric { background: #f8fafc !important; border-color: #cbd5e1 !important; }
+            #financial-report-paper .report-caption { color: #475569 !important; }
+            #financial-report-paper .report-table-wrap { overflow: visible !important; }
+            .financial-report-table { font-size: 8pt !important; }
+            .financial-report-table th, .financial-report-table td { padding: 5px !important; }
+            .financial-report-table thead { display: table-header-group; }
+            .financial-report-table tr { break-inside: avoid; page-break-inside: avoid; }
+            #financial-report-paper .financial-report-table td.text-emerald-700 { color: #047857 !important; }
+            #financial-report-paper .financial-report-table td.text-rose-700 { color: #be123c !important; }
+            .financial-report-page-break { break-before: page; page-break-before: always; }
+            .financial-report-toolbar, .financial-report-close { display: none !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body class="cyber-grid antialiased min-h-screen flex flex-col md:flex-row relative">
+
+    <!-- Background Ambient Glowing Orbs -->
+    <div class="cyber-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Floating Toast Notifications Container -->
+    <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-3 max-w-sm pointer-events-none"></div>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="w-full md:w-80 glass-3d text-slate-100 flex-shrink-0 flex flex-col justify-between z-30 border-l border-slate-800/80 m-0 md:m-3 md:rounded-3xl h-auto md:h-[calc(100vh-1.5rem)] relative overflow-hidden">
+        <div class="hologram-shimmer absolute inset-0 pointer-events-none"></div>
+
+        <div>
+            <!-- Header Logo -->
+            <div class="p-6 border-b border-slate-800/80 flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="icon-3d-wrapper w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-black shadow-lg shadow-cyan-500/30">
+                        <div class="icon-3d-glow bg-cyan-400"></div>
+                        <i class="fa-solid fa-cube text-cyan-200"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-black text-xl leading-tight font-mono tracking-wider bg-gradient-to-r from-cyan-400 via-teal-200 to-purple-400 bg-clip-text text-transparent">TASK TRACKER</h1>
+                        <p class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span> ENTERPRISE 3.0 NEO
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Urgent Alerts Banner -->
+            <div id="alerts-banner" class="hidden m-4 p-4 rounded-2xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs space-y-1.5 backdrop-blur-xl shadow-lg shadow-rose-950/50">
+                <div class="font-black flex items-center gap-2 text-rose-400 text-sm">
+                    <i class="fa-solid fa-triangle-exclamation fa-beat text-rose-500"></i> تنبيه مهام حرجة!
+                </div>
+                <p id="alerts-text" class="text-[11px] leading-relaxed text-slate-300 font-semibold"></p>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="p-4 space-y-2">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-slate-400 hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50">
+                    <div class="w-8 h-8 rounded-xl bg-cyan-950/80 border border-cyan-800/50 flex items-center justify-center text-cyan-400">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <span>لوحة التحكم </span>
+                </button>
+                <button onclick="switchTab('tasks')" id="nav-tasks" class="nav-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-slate-400 hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-950/80 border border-emerald-800/50 flex items-center justify-center text-emerald-400">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <span>إدارة المهام الشاملة</span>
+                    <span id="badge-total-tasks" class="mr-auto bg-slate-900/90 text-cyan-400 text-xs px-2.5 py-1 rounded-full border border-cyan-500/30 font-mono font-bold">0</span>
+                </button>
+                <button onclick="switchTab('gantt')" id="nav-gantt" class="nav-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-slate-400 hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50">
+                    <div class="w-8 h-8 rounded-xl bg-amber-950/80 border border-amber-800/50 flex items-center justify-center text-amber-400">
+                        <i class="fa-solid fa-timeline"></i>
+                    </div>
+                    <span>المخطط الزمني (Gantt 3D)</span>
+                </button>
+                <button onclick="switchTab('audit')" id="nav-audit" class="nav-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-slate-400 hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50">
+                    <div class="w-8 h-8 rounded-xl bg-pink-950/80 border border-pink-800/50 flex items-center justify-center text-pink-400">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <span>سجل التغيرات والأنشطة</span>
+                </button>
+                <button onclick="switchTab('settings')" id="nav-settings" class="nav-btn w-full flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all font-bold text-slate-400 hover:bg-slate-800/60 hover:text-white border border-transparent hover:border-slate-700/50">
+                    <div class="w-8 h-8 rounded-xl bg-purple-950/80 border border-purple-800/50 flex items-center justify-center text-purple-400">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <span>إدارة القوائم والمرجعيات</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Controls & System Actions -->
+        <div class="p-4 border-t border-slate-800/80 space-y-3">
+            <button onclick="openTaskModal()" class="w-full bg-gradient-to-r from-cyan-500 via-sky-600 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-black py-3.5 px-4 rounded-2xl shadow-lg shadow-cyan-500/25 flex items-center justify-center gap-2.5 transition-all transform active:scale-95 border border-cyan-400/30">
+                <i class="fa-solid fa-plus-circle text-lg"></i>
+                <span>إضافة مهمة جديدة</span>
+            </button>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="exportData('csv')" class="bg-slate-900/90 hover:bg-slate-800 text-xs text-slate-300 py-2.5 px-2 rounded-xl text-center border border-slate-800 transition flex items-center justify-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-file-csv text-emerald-400"></i> تصدير CSV
+                </button>
+                <button onclick="exportData('json')" class="bg-slate-900/90 hover:bg-slate-800 text-xs text-slate-300 py-2.5 px-2 rounded-xl text-center border border-slate-800 transition flex items-center justify-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-file-code text-purple-400"></i> تصدير JSON
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <label class="bg-slate-900/90 hover:bg-slate-800 text-xs text-slate-300 py-2.5 px-2 rounded-xl text-center border border-slate-800 transition cursor-pointer flex items-center justify-center gap-1.5 font-bold">
+                    <i class="fa-solid fa-file-import text-cyan-400"></i> استيراد
+                    <input type="file" id="import-json-file" accept=".json" onchange="importJSONData(event)" class="hidden">
+                </label>
+                <button onclick="resetToSampleData()" class="bg-slate-900/90 hover:bg-slate-800 text-xs text-slate-300 py-2.5 px-2 rounded-xl text-center border border-slate-800 transition flex items-center justify-center gap-1.5 font-bold" title="إعادة تعيين 30 مهمة أصلية">
+                    <i class="fa-solid fa-rotate-right text-amber-400"></i> ضبط المصنع
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT MAIN PANEL -->
+    <main class="flex-1 overflow-y-auto custom-scrollbar flex flex-col h-auto md:h-screen p-3 md:p-3 md:pr-0 z-10">
+        <!-- Top Glass Header Bar -->
+        <header class="glass-3d border border-slate-800/80 rounded-2xl md:rounded-3xl sticky top-0 z-20 px-6 py-4 flex flex-wrap items-center justify-between gap-4 mb-6">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 font-bold">
+                    <i class="fa-solid fa-satellite-dish"></i>
+                </div>
+                <div>
+                    <h2 id="page-title" class="text-xl font-black text-white">لوحة التحكم </h2>
+                    <p class="text-[11px] text-cyan-400 font-semibold">نظام إدارة ومتابعة الأداء للمؤسسة</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div class="relative">
+                    <i class="fa-solid fa-search absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text" id="global-search" oninput="handleGlobalSearch(this.value)" placeholder="بحث سريع عن مهمة، مسؤول، ID..." class="pl-4 pr-10 py-2.5 text-xs rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100 focus:outline-none focus:border-cyan-500 w-56 sm:w-72 transition font-medium">
+                </div>
+                <div id="notification-center" class="relative">
+                    <button id="notification-toggle" type="button" onclick="toggleNotificationCenter()" aria-label="فتح الإشعارات" aria-expanded="false" class="relative p-2.5 text-slate-300 hover:bg-slate-800 rounded-xl transition border border-slate-800 bg-slate-900/60">
+                        <i class="fa-solid fa-bell text-amber-300"></i>
+                        <span id="notification-unread-badge" class="hidden absolute -top-1.5 -left-1.5 min-w-5 h-5 px-1 rounded-full bg-rose-500 text-white text-[10px] font-black items-center justify-center border-2 border-slate-950">0</span>
+                    </button>
+                    <section id="notification-panel" class="notification-panel hidden glass-3d rounded-2xl border border-slate-700 bg-slate-950/95 text-slate-100" aria-label="مركز الإشعارات">
+                        <div class="flex items-center justify-between gap-3 p-4 border-b border-slate-800">
+                            <div>
+                                <h3 class="font-black text-sm">الإشعارات</h3>
+                                <p id="notification-summary" class="mt-1 text-[10px] text-slate-400"></p>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button type="button" data-notification-action="read-all" class="text-[10px] font-bold text-cyan-300 hover:text-white">قراءة الكل</button>
+                                <button type="button" data-notification-action="clear" class="p-1.5 text-slate-400 hover:text-rose-300" title="مسح الإشعارات"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                        <div id="notification-list" class="notification-list p-2"></div>
+                    </section>
+                </div>
+                <button onclick="openFinancialReport()" class="p-2.5 text-slate-300 hover:bg-slate-800 rounded-xl transition border border-slate-800 bg-slate-900/60" title="فتح التقرير المالي الشهري">
+                    <i class="fa-solid fa-file-invoice-dollar text-cyan-400"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Views Area -->
+        <div class="space-y-6 flex-1 pb-10">
+
+            <!-- 1. DASHBOARD TELEMETRY VIEW -->
+            <section id="view-dashboard" class="space-y-6">
+                <div class="glass-3d rounded-3xl border border-cyan-500/20 p-6 md:p-8 relative overflow-hidden bg-gradient-to-br from-cyan-950/50 via-slate-950/70 to-indigo-950/40">
+                    <div class="absolute -left-12 -top-20 w-56 h-56 rounded-full bg-cyan-500/10 blur-3xl pointer-events-none"></div>
+                    <div class="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        <div class="max-w-3xl">
+                            <div class="flex flex-wrap items-center gap-2 mb-3">
+                                <span class="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/70 px-3 py-1 text-[10px] font-bold text-cyan-300">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                                    الملخص التنفيذي
+                                </span>
+                                <span id="executive-date" class="text-[11px] text-slate-400"></span>
+                            </div>
+                            <h2 class="text-2xl md:text-3xl font-black text-white">صورة واضحة. قرارات أسرع.</h2>
+                            <p id="executive-summary" class="mt-2 text-sm text-slate-300 leading-relaxed">ملخص أداء المهام والميزانية والأولويات.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-3">
+                            <button type="button" onclick="openTaskModal()" class="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-black transition shadow-lg shadow-cyan-500/20">
+                                <i class="fa-solid fa-plus ml-1"></i> إضافة مهمة
+                            </button>
+                            <button type="button" onclick="switchTab('tasks')" class="px-4 py-2.5 rounded-xl border border-slate-700 bg-slate-900/70 hover:bg-slate-800 text-slate-200 text-xs font-bold transition">
+                                <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-cyan-400"></i> عرض جميع المهام
+                            </button>
+                        </div>
+                    </div>
+                    <div class="relative mt-6 pt-5 border-t border-white/10">
+                        <div class="flex items-center justify-between gap-4 mb-2">
+                            <span class="text-xs font-bold text-slate-300">متوسط التقدم الإجمالي</span>
+                            <span id="executive-progress-label" class="text-xs font-mono font-bold text-cyan-300">0%</span>
+                        </div>
+                        <div class="h-2.5 rounded-full bg-slate-900/90 border border-white/5 overflow-hidden">
+                            <div id="executive-progress-bar" class="h-full rounded-full bg-gradient-to-l from-cyan-400 to-emerald-400 transition-all duration-700" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3D Holographic Metric KPI Cards Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    
+                    <!-- KPI 1 -->
+                    <div class="glass-3d glass-3d-hover p-6 rounded-3xl border border-slate-800/80 flex items-center justify-between relative overflow-hidden group">
+                        <div class="z-10">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">إجمالي المهام</p>
+                            <h3 id="kpi-total-tasks" class="text-3xl font-black text-white font-mono">0</h3>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span class="text-xs text-slate-300 font-bold"><span id="kpi-completed-pct" class="text-emerald-400 font-mono">0%</span> مكتملة</span>
+                            </div>
+                        </div>
+                        <div class="icon-3d-wrapper w-16 h-16 bg-cyan-950/60 rounded-2xl flex items-center justify-center text-cyan-400 text-3xl border border-cyan-800/50">
+                            <div class="icon-3d-glow bg-cyan-500"></div>
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                        </div>
+                    </div>
+
+                    <!-- KPI 2 -->
+                    <div class="glass-3d glass-3d-hover p-6 rounded-3xl border border-slate-800/80 flex items-center justify-between relative overflow-hidden group">
+                        <div class="z-10">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">قيد التنفيذ والحرجة</p>
+                            <h3 id="kpi-in-progress" class="text-3xl font-black text-sky-400 font-mono">0</h3>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+                                <span class="text-xs text-rose-400 font-bold"><span id="kpi-critical-count" class="font-mono">0</span> عاجلة وحرجة</span>
+                            </div>
+                        </div>
+                        <div class="icon-3d-wrapper w-16 h-16 bg-sky-950/60 rounded-2xl flex items-center justify-center text-sky-400 text-3xl border border-sky-800/50">
+                            <div class="icon-3d-glow bg-sky-500"></div>
+                            <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+                        </div>
+                    </div>
+
+                    <!-- KPI 3 -->
+                    <div class="glass-3d glass-3d-hover p-6 rounded-3xl border border-slate-800/80 flex items-center justify-between relative overflow-hidden group">
+                        <div class="z-10">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">المهام المفتوحة ضمن الموعد</p>
+                            <h3 id="kpi-on-time-rate" class="text-3xl font-black text-emerald-400 font-mono">0%</h3>
+                            <div class="mt-2 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                                <span class="text-xs text-rose-400 font-bold"><span id="kpi-overdue-count" class="font-mono">0</span> مهمة متأخرة</span>
+                            </div>
+                        </div>
+                        <div class="icon-3d-wrapper w-16 h-16 bg-amber-950/60 rounded-2xl flex items-center justify-center text-amber-400 text-3xl border border-amber-800/50">
+                            <div class="icon-3d-glow bg-amber-500"></div>
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                    </div>
+
+                    <!-- KPI 4 -->
+                    <div class="glass-3d glass-3d-hover p-6 rounded-3xl border border-slate-800/80 flex items-center justify-between relative overflow-hidden group">
+                        <div class="z-10">
+                            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">الميزانية المرصودة</p>
+                            <h3 id="kpi-total-budget" class="text-lg font-black text-white font-mono">0 DZD</h3>
+                            <p id="kpi-budget-variance" class="text-xs font-bold mt-2 text-emerald-400">الوفر: 0 DZD</p>
+                            <p id="kpi-budget-utilization" class="text-[10px] font-semibold mt-1 text-slate-400">الإنفاق: 0%</p>
+                        </div>
+                        <div class="icon-3d-wrapper w-16 h-16 bg-emerald-950/60 rounded-2xl flex items-center justify-center text-emerald-400 text-3xl border border-emerald-800/50">
+                            <div class="icon-3d-glow bg-emerald-500"></div>
+                            <i class="fa-solid fa-vault"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-5 gap-5">
+                    <div class="xl:col-span-2 glass-3d p-5 md:p-6 rounded-3xl border border-slate-800/80">
+                        <div class="flex items-start justify-between gap-3 mb-5">
+                            <div>
+                                <h3 class="font-black text-white text-sm flex items-center gap-2"><i class="fa-solid fa-bolt text-amber-400"></i> مؤشرات تتطلب تدخلاً</h3>
+                                <p class="text-[11px] text-slate-400 mt-1">انتقل مباشرة إلى مجموعة العمل ذات الأولوية</p>
+                            </div>
+                            <span class="text-[10px] text-cyan-300 border border-cyan-500/20 bg-cyan-950/40 rounded-full px-2.5 py-1 font-bold">مباشر</span>
+                        </div>
+                        <div id="executive-action-cards" class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-1 gap-3"></div>
+                    </div>
+                    <div class="xl:col-span-3 glass-3d p-5 md:p-6 rounded-3xl border border-slate-800/80">
+                        <div class="flex items-center justify-between gap-3 mb-4">
+                            <div>
+                                <h3 class="font-black text-white text-sm flex items-center gap-2"><i class="fa-solid fa-list-check text-cyan-400"></i> أهم الإجراءات الآن</h3>
+                                <p class="text-[11px] text-slate-400 mt-1">مهام حرجة أو متأخرة أو قريبة الاستحقاق</p>
+                            </div>
+                            <button type="button" onclick="switchTab('tasks'); applyQuickFilter('attention')" class="text-[11px] text-cyan-300 hover:text-white font-bold transition whitespace-nowrap">عرض القائمة <i class="fa-solid fa-arrow-left mr-1"></i></button>
+                        </div>
+                        <div id="executive-priority-list" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Dark Neon Telemetry Charts -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl">
+                        <h3 class="font-bold text-slate-100 mb-6 flex items-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-chart-pie text-cyan-400"></i> توزيع حالات المهام
+                        </h3>
+                        <div class="relative h-72">
+                            <canvas id="chartStatus"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl">
+                        <h3 class="font-bold text-slate-100 mb-6 flex items-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-chart-bar text-purple-400"></i> عدد المهام حسب القسم
+                        </h3>
+                        <div class="relative h-72">
+                            <canvas id="chartDepartment"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl">
+                        <h3 class="font-bold text-slate-100 mb-6 flex items-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-money-bill-wave text-emerald-400"></i> مقارنة الميزانية المخططة والإنفاق الفعلي (DZD)
+                        </h3>
+                        <div class="relative h-72">
+                            <canvas id="chartBudget"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl">
+                        <h3 class="font-bold text-slate-100 mb-6 flex items-center gap-2.5 text-sm">
+                            <i class="fa-solid fa-layer-group text-amber-400"></i> توزيع الأولويات
+                        </h3>
+                        <div class="relative h-72">
+                            <canvas id="chartPriority"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TASKS TRACKER VIEW -->
+            <section id="view-tasks" class="hidden space-y-6">
+                <!-- Filters Glass Bar -->
+                <div class="glass-3d p-5 rounded-3xl border border-slate-800/80 space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-slate-100 flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-filter text-cyan-400"></i> نظام التصفية والتصنيف 
+                            </h3>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="bg-slate-900/90 p-1 rounded-2xl flex items-center gap-1 border border-slate-800">
+                                <button onclick="setTaskViewMode('table')" id="btn-view-table" class="px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 text-white shadow-md">
+                                    <i class="fa-solid fa-table-cells"></i> جدول
+                                </button>
+                                <button onclick="setTaskViewMode('kanban')" id="btn-view-kanban" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200">
+                                    <i class="fa-solid fa-table-columns"></i> كانبان
+                                </button>
+                            </div>
+                            <select id="sort-tasks" onchange="setTaskSort(this.value)" class="text-xs p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-200 focus:outline-none focus:border-cyan-500">
+                                <option value="deadline-asc">الأقرب موعداً</option>
+                                <option value="deadline-desc">الأبعد موعداً</option>
+                                <option value="priority">الأولوية</option>
+                                <option value="progress-desc">نسبة الإنجاز (الأعلى)</option>
+                                <option value="progress-asc">نسبة الإنجاز (الأقل)</option>
+                                <option value="created-desc">الأحدث إضافة</option>
+                            </select>
+                            <button onclick="resetFilters()" class="text-xs text-cyan-400 hover:underline font-bold flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-right"></i> إعادة تعيين
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">القسم</label>
+                            <select id="filter-dept" onchange="applyFilters()" class="w-full text-xs p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">الحالة</label>
+                            <select id="filter-status" onchange="applyFilters()" class="w-full text-xs p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">الأولوية</label>
+                            <select id="filter-priority" onchange="applyFilters()" class="w-full text-xs p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100"></select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">الميزانية</label>
+                            <select id="filter-budget" onchange="applyFilters()" class="w-full text-xs p-2.5 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100">
+                                <option value="">الكل</option>
+                                <option value="savings">تحقيق وفر مالي</option>
+                                <option value="exceeded">تجاوز الميزانية</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">تاريخ من</label>
+                            <input type="date" id="filter-date-from" onchange="applyFilters()" class="w-full text-xs p-2 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">تاريخ إلى</label>
+                            <input type="date" id="filter-date-to" onchange="applyFilters()" class="w-full text-xs p-2 rounded-xl border border-slate-800 bg-slate-900/90 text-slate-100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TABLE VIEW -->
+                <div id="container-table-view" class="glass-3d rounded-3xl border border-slate-800/80 shadow-2xl overflow-hidden">
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-right border-collapse text-xs">
+                            <thead class="bg-slate-900/95 text-slate-300 font-bold border-b border-slate-800">
+                                <tr>
+                                    <th class="p-4">ID</th>
+                                    <th class="p-4">اسم المهمة والتفاصيل</th>
+                                    <th class="p-4">القسم والموقع</th>
+                                    <th class="p-4">نوع العمل (Trade)</th>
+                                    <th class="p-4">المسؤول والمشاركون</th>
+                                    <th class="p-4">الأولوية</th>
+                                    <th class="p-4">الحالة</th>
+                                    <th class="p-4">نسبة الإنجاز</th>
+                                    <th class="p-4">الموعد النهائي</th>
+                                    <th class="p-4">الأيام المتبقية</th>
+                                    <th class="p-4">الميزانية والإنفاق (DZD)</th>
+                                    <th class="p-4 text-center">إجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tasks-table-body" class="divide-y divide-slate-800/60">
+                                <!-- Dynamic tasks -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div id="no-tasks-row" class="hidden p-12 text-center text-slate-500">
+                        <i class="fa-solid fa-folder-open text-5xl mb-3 text-slate-700"></i>
+                        <p class="font-bold text-sm">لا توجد مهام تطابق خيارات التصفية الحالية</p>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/80 border-t border-slate-800/80 flex justify-between items-center text-xs text-slate-400 font-bold">
+                        <span id="tasks-count-info">عرض 0 من إجمالي 0 مهمة</span>
+                    </div>
+                </div>
+
+                <!-- KANBAN BOARD 3D VIEW (Drag & Drop) -->
+                <div id="container-kanban-view" class="kanban-board hidden grid gap-5 custom-scrollbar pb-6">
+                    <!-- Dynamic Kanban columns -->
+                </div>
+            </section>
+
+            <!-- 3. GANTT / TIMELINE 3D VIEW -->
+            <section id="view-gantt" class="hidden space-y-4">
+                <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl space-y-6">
+                    <div class="flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h3 class="font-bold text-slate-100 flex items-center gap-2 text-sm">
+                                <i class="fa-solid fa-calendar-days text-amber-400"></i> المخطط الزمني التفاعلي ثلاثي الأبعاد (Gantt 3D)
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-1">عرض بصري شامل للأيام ونسب الإنجاز لكل مهمة من المهام الـ 30</p>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto custom-scrollbar border border-slate-800/80 rounded-2xl bg-slate-950/60 p-4">
+                        <div id="gantt-chart-wrapper" class="min-w-[850px] space-y-4">
+                            <!-- Gantt content generated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. AUDIT TRAIL LOG VIEW -->
+            <section id="view-audit" class="hidden space-y-4">
+                <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-800/80 pb-4">
+                        <h3 class="font-bold text-slate-100 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-clock-rotate-left text-pink-400"></i> سجل النشاطات والتغيرات المباشرة (Audit Trail)
+                        </h3>
+                        <button onclick="clearAuditLog()" class="text-xs text-rose-400 hover:underline font-bold">مسح السجل</button>
+                    </div>
+
+                    <div id="audit-log-container" class="space-y-3 max-h-[600px] overflow-y-auto custom-scrollbar">
+                        <!-- Log items generated dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. SETTINGS & LOOKUPS VIEW -->
+            <section id="view-settings" class="hidden space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 space-y-5">
+                        <h3 class="font-bold text-slate-100 border-b border-slate-800/80 pb-3 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-list-ul text-purple-400"></i> إضافة عناصر القوائم المنسدلة
+                        </h3>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">إضافة قسم جديد</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="new-dept-input" placeholder="اسم القسم..." class="flex-1 text-xs p-3 rounded-xl border border-slate-800 bg-slate-900 text-slate-100">
+                                <button onclick="addSettingItem('departments', 'new-dept-input')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-5 py-3 rounded-xl font-bold transition">إضافة</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">إضافة موقع جديد</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="new-loc-input" placeholder="اسم الموقع..." class="flex-1 text-xs p-3 rounded-xl border border-slate-800 bg-slate-900 text-slate-100">
+                                <button onclick="addSettingItem('locations', 'new-loc-input')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-5 py-3 rounded-xl font-bold transition">إضافة</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1.5">إضافة نوع عمل / Trade</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="new-worktype-input" placeholder="نوع العمل..." class="flex-1 text-xs p-3 rounded-xl border border-slate-800 bg-slate-900 text-slate-100">
+                                <button onclick="addSettingItem('workTypes', 'new-worktype-input')" class="bg-purple-600 hover:bg-purple-500 text-white text-xs px-5 py-3 rounded-xl font-bold transition">إضافة</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-3d p-6 rounded-3xl border border-slate-800/80 space-y-5">
+                        <h3 class="font-bold text-slate-100 border-b border-slate-800/80 pb-3 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-database text-cyan-400"></i> عناصر القوائم المتاحة حالياً
+                        </h3>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 font-mono"> الأقسام (Departments):</h4>
+                            <div id="settings-dept-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar p-1"></div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 font-mono">المواقع (Locations):</h4>
+                            <div id="settings-loc-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar p-1"></div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-300 mb-2 font-mono">أنواع العمل (Trades):</h4>
+                            <div id="settings-worktype-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto custom-scrollbar p-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <div id="financial-report-overlay" class="fixed inset-0 z-[90] hidden items-start justify-center overflow-y-auto bg-slate-950/90 backdrop-blur-md p-3 md:p-6">
+        <div id="financial-report-dialog" role="dialog" aria-modal="true" aria-labelledby="financial-report-title" class="w-full max-w-6xl rounded-3xl border border-slate-700 bg-slate-950 text-slate-100 shadow-2xl overflow-hidden">
+            <div class="financial-report-toolbar sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/95 p-4">
+                <div class="flex items-center gap-3">
+                    <label for="financial-report-month" class="text-xs font-bold text-slate-300">شهر التقرير</label>
+                    <input id="financial-report-month" type="month" class="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white focus:border-cyan-500 focus:outline-none">
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="window.print()" class="rounded-xl bg-cyan-500 px-4 py-2.5 text-xs font-black text-slate-950 hover:bg-cyan-400 transition"><i class="fa-solid fa-print ml-1"></i> طباعة / PDF</button>
+                    <button type="button" onclick="closeFinancialReport()" class="financial-report-close rounded-xl border border-slate-700 px-3 py-2.5 text-slate-300 hover:bg-slate-800 transition" aria-label="إغلاق التقرير"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <article id="financial-report-paper" class="bg-white p-5 text-slate-900 md:p-8">
+                <header class="flex items-start justify-between gap-4 border-b-2 border-slate-900 pb-5">
+                    <div>
+                        <p class="text-xs font-black tracking-wide text-cyan-700">TASK TRACKER PRO · الإدارة المالية</p>
+                        <h1 id="financial-report-title" class="mt-2 text-xl font-black md:text-2xl">التقرير المالي المفصل للمصاريف الشهرية</h1>
+                        <p id="financial-report-period" class="mt-1 text-sm font-bold text-slate-600"></p>
+                    </div>
+                    <div class="text-left text-[10px] leading-5 text-slate-500">
+                        <p>تاريخ الإصدار</p>
+                        <p id="financial-report-generated" class="font-bold text-slate-700"></p>
+                        <p>العملة: DZD</p>
+                    </div>
+                </header>
+                <div id="financial-report-metrics" class="my-5 grid grid-cols-2 gap-3 md:grid-cols-4"></div>
+                <p class="report-caption rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-[10px] leading-5 text-amber-900"></p>
+                <section class="mt-6">
+                    <div class="mb-3 flex items-end justify-between gap-3">
+                        <div>
+                            <h2 class="text-sm font-black">تفاصيل المصاريف حسب المهمة</h2>
+                            <p id="financial-report-count" class="mt-1 text-[10px] text-slate-500"></p>
+                        </div>
+                        <p class="text-[10px] font-bold text-slate-500">مرتبة حسب الإنفاق الفعلي</p>
+                    </div>
+                    <div class="report-table-wrap overflow-x-auto">
+                        <table class="financial-report-table text-[10px]">
+                            <thead><tr>
+                                <th>#</th><th>ID</th><th>بيان المصروف / المهمة</th><th>القسم</th><th>الميزانية (DZD)</th><th>الإنفاق (DZD)</th><th>الفرق (DZD)</th>
+                            </tr></thead>
+                            <tbody id="financial-report-rows"></tbody>
+                            <tfoot id="financial-report-totals"></tfoot>
+                        </table>
+                    </div>
+                </section>
+                <section class="financial-report-page-break mt-8">
+                    <div class="border-b border-slate-200 pb-3">
+                        <p class="text-xs font-black tracking-wide text-cyan-700">تحليل المصاريف</p>
+                        <h2 class="mt-1 text-lg font-black">التوزيع المالي حسب القسم</h2>
+                    </div>
+                    <div class="report-table-wrap mt-4 overflow-x-auto">
+                        <table class="financial-report-table text-xs">
+                            <thead><tr><th>#</th><th>القسم</th><th>عدد البنود</th><th>الميزانية (DZD)</th><th>الإنفاق الفعلي (DZD)</th><th>المتبقي (DZD)</th><th>نسبة الإنفاق</th></tr></thead>
+                            <tbody id="financial-report-departments"></tbody>
+                        </table>
+                    </div>
+                    <div class="mt-8 grid grid-cols-2 gap-12 text-center text-xs">
+                        <div class="border-t border-slate-400 pt-2">إعداد</div>
+                        <div class="border-t border-slate-400 pt-2">اعتماد</div>
+                    </div>
+                    <p class="mt-8 text-center text-[9px] text-slate-500">تم إنشاء هذا التقرير من البيانات المسجلة في نظام تتبع المهام.</p>
+                </section>
+            </article>
+        </div>
+    </div>
+
+    <!-- TASK EDIT / ADD MODAL -->
+    <div id="task-modal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-xl z-50 hidden flex items-center justify-center p-4 overflow-y-auto transition-all duration-300 opacity-0 scale-95">
+        <div class="glass-3d rounded-3xl shadow-2xl border border-slate-800 w-full max-w-3xl overflow-hidden my-8 transform transition-all">
+            <div class="bg-slate-900/90 text-white p-5 px-6 flex items-center justify-between border-b border-slate-800">
+                <h3 id="modal-title" class="font-black text-base flex items-center gap-2.5">
+                    <i class="fa-solid fa-plus-circle text-cyan-400"></i> إضافة مهمة جديدة
+                </h3>
+                <button onclick="closeTaskModal()" class="text-slate-400 hover:text-white transition text-xl">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="task-form" onsubmit="saveTask(event)" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto custom-scrollbar text-slate-100">
+                <input type="hidden" id="task-id">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold mb-1.5">اسم المهمة / الإجراء المطلوب <span class="text-rose-500">*</span></label>
+                        <input type="text" id="task-name" required placeholder="عنوان المهمة..." class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">القسم <span class="text-rose-500">*</span></label>
+                        <select id="task-department" required class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">نوع العمل / Trade</label>
+                        <select id="task-worktype" class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الموقع / الورشة</label>
+                        <select id="task-location" class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">المسؤول عن المهمة (Owner) <span class="text-rose-500">*</span></label>
+                        <input type="text" id="task-owner" required placeholder="اسم المسؤول..." class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">المشاركون (Contributors)</label>
+                        <input type="text" id="task-contributors" placeholder="أسماء المشاركين..." class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الأولوية <span class="text-rose-500">*</span></label>
+                        <select id="task-priority" required class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الحالة <span class="text-rose-500">*</span></label>
+                        <select id="task-status" required class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">تاريخ البدء المخطط</label>
+                        <input type="date" id="task-startdate" class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الموعد النهائي (Deadline) <span class="text-rose-500">*</span></label>
+                        <input type="date" id="task-deadline" required class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div class="md:col-span-2 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="text-xs font-bold">نسبة الإنجاز (%)</label>
+                            <span id="progress-value-display" class="text-xs font-black text-cyan-400 font-mono">0%</span>
+                        </div>
+                        <input type="range" id="task-progress" min="0" max="100" value="0" oninput="document.getElementById('progress-value-display').innerText = this.value + '%'" class="w-full accent-cyan-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الميزانية المخططة (DZD)</label>
+                        <input type="number" id="task-budget" min="0" step="100" placeholder="0" class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500 font-mono">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1.5">الإنفاق الفعلي (DZD)</label>
+                        <input type="number" id="task-actual" min="0" step="100" placeholder="0" class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500 font-mono">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold mb-1.5">المعوقات / التبعيات (Blockers / Dependencies)</label>
+                        <input type="text" id="task-blockers" placeholder="عوائق في حال وجودها..." class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500">
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label class="block text-xs font-bold mb-1.5">ملاحظات / تعليقات</label>
+                        <textarea id="task-comments" rows="2" placeholder="ملاحظات إضافية..." class="w-full text-xs p-3 rounded-xl border border-slate-800 bg-slate-900/90 focus:border-cyan-500"></textarea>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-800 flex justify-end gap-3">
+                    <button type="button" onclick="closeTaskModal()" class="px-5 py-2.5 text-xs font-bold text-slate-400 hover:bg-slate-800 rounded-xl transition">إلغاء</button>
+                    <button type="submit" class="px-6 py-2.5 text-xs font-bold bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl shadow-lg transition">حفظ المهمة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MAIN APP JAVASCRIPT ENGINE (WITH ALL 30 ORIGINAL TASKS) -->
+    <script>
+        const DEFAULT_LOOKUPS = {
+            departments: [
+                'General Management', 'Finance / Accounting', 'Production', 'Maintenance',
+                'Quality Control', 'Purchasing / Procurement', 'Warehouse / Inventory',
+                'Logistics / Transport', 'Sales / Commercial', 'Human Resources',
+                'HSE / Safety', 'IT / Information Systems', 'Legal / Administration',
+                'R&D / Development', 'Other'
+            ],
+            workTypes: [
+                'Electrical Works', 'Plumbing', 'Masonry / Bricklaying', 'Painting',
+                'Carpentry / Joinery', 'Welding / Metalwork', 'HVAC / Air Conditioning',
+                'Civil Works', 'Roofing / Waterproofing', 'Flooring / Tiling',
+                'Glass / Aluminum Works', 'Mechanical Works', 'Industrial Equipment',
+                'Automation / Instrumentation', 'IT / Network Cabling', 'Cleaning',
+                'Landscaping / Outdoor Works', 'Security / Access Control',
+                'Transport / Handling', 'General Repairs', 'Other'
+            ],
+            locations: [
+                'Admin', 'Caravan', 'Primary maassel', 'Secondary maassel',
+                'Manual maassel', 'Labo 1', 'Labo 2', 'Labo 3', 'Chemma',
+                'Warehouse flavour', 'Warehouse RM', 'Warehouse FG', 'Warehouse SP',
+                'Outside', 'Primary snus', 'Secondary snus', 'Other'
+            ],
+            statuses: ['To Do', 'In Progress', 'Pending', 'Blocked', 'Completed', 'Cancelled'],
+            priorities: ['Critical', 'High', 'Medium', 'Low']
+        };
+
+        const INJECTED_TASKS = [
+          {
+            "id": "TSK-1001",
+            "department": "Production",
+            "workType": "Mechanical Works",
+            "location": "Primary maassel",
+            "name": "Maintenance and modification of the sugar pump",
+            "owner": "Abderrahim",
+            "contributors": "Abdelhak",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-07-01",
+            "startDate": "2026-10-27",
+            "deadline": "2026-11-07",
+            "progress": 25,
+            "budget": 120000,
+            "actualSpend": 105000,
+            "blockers": "",
+            "comments": "25% executed in coordination with Primary Team Leader Abdelhak"
+          },
+          {
+            "id": "TSK-1002",
+            "department": "HSE / Safety",
+            "workType": "Cleaning",
+            "location": "Washing Area",
+            "name": "Equip washing area with towel racks & shelves + drain unclogging and ant pest control",
+            "owner": "Cleaning Team",
+            "contributors": "Maintenance",
+            "priority": "Critical",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-29",
+            "deadline": "2026-11-05",
+            "progress": 0,
+            "budget": 40000,
+            "actualSpend": 0,
+            "blockers": "Area damaged by ants & severe drain clogging",
+            "comments": "Most affected area requiring urgent intervention"
+          },
+          {
+            "id": "TSK-1003",
+            "department": "Purchasing / Procurement",
+            "workType": "Industrial Equipment",
+            "location": "Labo 1",
+            "name": "Procurement and supply of laboratory equipment for Lab 1",
+            "owner": "Sara",
+            "contributors": "Marwa",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-10",
+            "progress": 15,
+            "budget": 150000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Coordinated with Sara (Purchasing) & Marwa (Lab 1 Manager)"
+          },
+          {
+            "id": "TSK-1004",
+            "department": "Maintenance",
+            "workType": "HVAC / Air Conditioning",
+            "location": "Labo 1",
+            "name": "Installation of exhaust fans and air conditioner for Lab 1",
+            "owner": "Maintenance",
+            "contributors": "Marwa",
+            "priority": "High",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-30",
+            "deadline": "2026-11-08",
+            "progress": 0,
+            "budget": 120000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Exhaust fans (50k DZD) & AC unit (70k DZD)"
+          },
+          {
+            "id": "TSK-1005",
+            "department": "Production",
+            "workType": "Glass / Aluminum Works",
+            "location": "Manual maassel",
+            "name": "Supplying manual assembly line with stainless steel equipment, shelves, and trays",
+            "owner": "Soumia",
+            "contributors": "Sara",
+            "priority": "Medium",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-05",
+            "progress": 20,
+            "budget": 50000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Coordinated with Chef Leader Soumia & Sara (Purchasing)"
+          },
+          {
+            "id": "TSK-1006",
+            "department": "Production",
+            "workType": "General Repairs",
+            "location": "Secondary maassel",
+            "name": "Providing tools, brushes, shelves, and cleaning equipment for secondary line",
+            "owner": "Sara",
+            "contributors": "Secondary Line Leader",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-29",
+            "deadline": "2026-11-06",
+            "progress": 0,
+            "budget": 50000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Tools & accessories capped at 50,000 DZD"
+          },
+          {
+            "id": "TSK-1007",
+            "department": "Warehouse / Inventory",
+            "workType": "General Repairs",
+            "location": "Warehouse FG",
+            "name": "Completing organization and setup of tobacco, finished goods, and bins warehouses",
+            "owner": "Warehouse Manager",
+            "contributors": "Mohamed",
+            "priority": "Medium",
+            "status": "Pending",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-15",
+            "progress": 0,
+            "budget": 100000,
+            "actualSpend": 0,
+            "blockers": "Work currently pending in warehouses",
+            "comments": "Follow-up on warehouse organization & stacking"
+          },
+          {
+            "id": "TSK-1008",
+            "department": "Maintenance",
+            "workType": "Glass / Aluminum Works",
+            "location": "Warehouse flavour",
+            "name": "Installation of the partition window between flavor room and E-Liquid prep room",
+            "owner": "Contractor Badro",
+            "contributors": "Flavour Team",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-25",
+            "startDate": "2026-10-25",
+            "deadline": "2026-11-02",
+            "progress": 0,
+            "budget": 100000,
+            "actualSpend": 100000,
+            "blockers": "Awaiting window installation by contractor Badro",
+            "comments": "Dedicated exhaust installed (100k DZD); awaiting window completion"
+          },
+          {
+            "id": "TSK-1009",
+            "department": "Production",
+            "workType": "Industrial Equipment",
+            "location": "Warehouse flavour",
+            "name": "Equipping E-Liquid prep room with mixer, dedicated tap, and accessories",
+            "owner": "Sara",
+            "contributors": "E-liquid Team",
+            "priority": "High",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-30",
+            "deadline": "2026-11-07",
+            "progress": 0,
+            "budget": 54000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Total estimated cost 54,000 DZD"
+          },
+          {
+            "id": "TSK-1010",
+            "department": "Maintenance",
+            "workType": "Civil Works",
+            "location": "Outside",
+            "name": "Partitioning compressor area with insulating panels and constructing changing room",
+            "owner": "Civil Maintenance",
+            "contributors": "Outside Team",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-11-02",
+            "deadline": "2026-11-12",
+            "progress": 0,
+            "budget": 150000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "In preparation for constructing worker changing room in yard"
+          },
+          {
+            "id": "TSK-1011",
+            "department": "General Management",
+            "workType": "Civil Works",
+            "location": "Outside",
+            "name": "Fitting out rest area (transparent doors, ventilation & exits, tables and chairs)",
+            "owner": "Admin / Maintenance",
+            "contributors": "Outside Team",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-10",
+            "progress": 0,
+            "budget": 325000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Transparent doors (200k DZD) + tables & chairs (100k-150k DZD)"
+          },
+          {
+            "id": "TSK-1012",
+            "department": "R&D / Development",
+            "workType": "General Repairs",
+            "location": "Caravan",
+            "name": "Converting second caravan into a hookah tobacco and flavor testing lounge",
+            "owner": "Mohamed",
+            "contributors": "Warehouse Team",
+            "priority": "High",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-15",
+            "progress": 0,
+            "budget": 250000,
+            "actualSpend": 0,
+            "blockers": "Merging 1st caravan staff & relocating equipment",
+            "comments": "Initial prep for testing lounge estimated at 200k-300k DZD"
+          },
+          {
+            "id": "TSK-1013",
+            "department": "Maintenance",
+            "workType": "Plumbing",
+            "location": "Caravan",
+            "name": "Completing rest of the restroom caravan (second phase)",
+            "owner": "Contractor Abdelnour",
+            "contributors": "Maintenance",
+            "priority": "Critical",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-31",
+            "deadline": "2026-11-02",
+            "progress": 40,
+            "budget": 170000,
+            "actualSpend": 0,
+            "blockers": "Starts Saturday; execution within 2 days max",
+            "comments": "Remaining payment balance of 170,000 DZD for restrooms"
+          },
+          {
+            "id": "TSK-1014",
+            "department": "Maintenance",
+            "workType": "Masonry / Bricklaying",
+            "location": "Outside",
+            "name": "Construction and completion of security room and guard office",
+            "owner": "Hassan & Abderrahim",
+            "contributors": "Security Team",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-08",
+            "progress": 30,
+            "budget": 180000,
+            "actualSpend": 50000,
+            "blockers": "Completing masonry & Mechlar door work (1 week)",
+            "comments": "Coordinated with Hassan (Mason) & Abderrahim (Mechlar)"
+          },
+          {
+            "id": "TSK-1015",
+            "department": "HSE / Safety",
+            "workType": "Transport / Handling",
+            "location": "Outside",
+            "name": "Procurement of 3 heavy-duty outdoor waste containers",
+            "owner": "Sara",
+            "contributors": "HSE Team",
+            "priority": "High",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-29",
+            "deadline": "2026-11-03",
+            "progress": 0,
+            "budget": 90000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Special order placed via Sara in Purchasing"
+          },
+          {
+            "id": "TSK-1016",
+            "department": "IT / Information Systems",
+            "workType": "Electrical Works",
+            "location": "Admin",
+            "name": "Completing technical department office (Mokhtar's electrical work + Mechlar's door)",
+            "owner": "Mokhtar & Mechlar",
+            "contributors": "IT Team",
+            "priority": "High",
+            "status": "Pending",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-30",
+            "deadline": "2026-11-07",
+            "progress": 10,
+            "budget": 120000,
+            "actualSpend": 0,
+            "blockers": "Door & electrical setup required before bringing desks",
+            "comments": "Awaiting completion of contractor works"
+          },
+          {
+            "id": "TSK-1017",
+            "department": "Maintenance",
+            "workType": "Industrial Equipment",
+            "location": "Warehouse SP",
+            "name": "Equipping maintenance workbench with press, hydraulic tape, and tools",
+            "owner": "Maintenance Team",
+            "contributors": "Sara",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-05",
+            "progress": 30,
+            "budget": 200000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Workbench built; equipping tools in progress (200,000 DZD)"
+          },
+          {
+            "id": "TSK-1018",
+            "department": "Production",
+            "workType": "HVAC / Air Conditioning",
+            "location": "Chemma",
+            "name": "Ventilating Chemma line area and creating an exhaust outlet for nicotine room",
+            "owner": "Chemma Leader",
+            "contributors": "HSE / Maintenance",
+            "priority": "Critical",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-30",
+            "deadline": "2026-11-06",
+            "progress": 0,
+            "budget": 80000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Preparing area for new production run & isolating nicotine room"
+          },
+          {
+            "id": "TSK-1019",
+            "department": "Production",
+            "workType": "Industrial Equipment",
+            "location": "Primary snus",
+            "name": "Supplying stainless steel equipment and supplies for snus production line",
+            "owner": "Sara",
+            "contributors": "Snus Team Leader",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-08",
+            "progress": 15,
+            "budget": 160000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Order coordination with Sara in Purchasing"
+          },
+          {
+            "id": "TSK-1020",
+            "department": "General Management",
+            "workType": "Carpentry / Joinery",
+            "location": "Admin",
+            "name": "Procurement and installation of second-floor admin workstation",
+            "owner": "Soufiane",
+            "contributors": "Admin Contractors",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-29",
+            "deadline": "2026-11-06",
+            "progress": 0,
+            "budget": 280000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "Order coordination with Soufiane (280,000 DZD)"
+          },
+          {
+            "id": "TSK-1021",
+            "department": "Legal / Administration",
+            "workType": "Glass / Aluminum Works",
+            "location": "Admin",
+            "name": "Final payment to Adel (door installer) upon completing door installations",
+            "owner": "Adel Door Installer",
+            "contributors": "Admin",
+            "priority": "High",
+            "status": "In Progress",
+            "createdDate": "2026-10-28",
+            "startDate": "2026-10-28",
+            "deadline": "2026-11-03",
+            "progress": 75,
+            "budget": 160000,
+            "actualSpend": 160000,
+            "blockers": "Payment conditional on 100% completion",
+            "comments": "Final installment of 160,000 DZD upon completion"
+          },
+          {
+            "id": "TSK-1022",
+            "department": "Human Resources",
+            "workType": "Other",
+            "location": "Admin",
+            "name": "أجور الشهر أكتوبر",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 2330000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1023",
+            "department": "Production",
+            "workType": "Mechanical Works",
+            "location": "Primary maassel",
+            "name": "صيانة وتعديل مضخة السكر (Sugar Pump)",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 15000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1024",
+            "department": "Maintenance",
+            "workType": "Masonry / Bricklaying",
+            "location": "Outside",
+            "name": "إنشاء واستكمال مكتب وغرفة الحراسة",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 130000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1025",
+            "department": "Production",
+            "workType": "Industrial Equipment",
+            "location": "Manual maassel",
+            "name": "طاولات inox",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 300000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1026",
+            "department": "Maintenance",
+            "workType": "Mechanical Works",
+            "location": "Warehouse FG",
+            "name": "تغيير زيت الرافعات الشوكية",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 26000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1027",
+            "department": "Finance / Accounting",
+            "workType": "Other",
+            "location": "Admin",
+            "name": "مستحقات الفندق",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 780000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1028",
+            "department": "Production",
+            "workType": "Industrial Equipment",
+            "location": "Chemma",
+            "name": "فيلم التغليف الشمة",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 290000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1029",
+            "department": "IT / Information Systems",
+            "workType": "IT / Network Cabling",
+            "location": "Admin",
+            "name": "طابعة label+ruban",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 140000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          },
+          {
+            "id": "TSK-1030",
+            "department": "Finance / Accounting",
+            "workType": "Other",
+            "location": "Admin",
+            "name": "مصاريف شهرية أخرى",
+            "owner": "Finance / Admin",
+            "contributors": "",
+            "priority": "Medium",
+            "status": "To Do",
+            "createdDate": "2026-10-31",
+            "startDate": "2026-11-01",
+            "deadline": "2026-11-30",
+            "progress": 0,
+            "budget": 440000,
+            "actualSpend": 0,
+            "blockers": "",
+            "comments": "تمت الإضافة بناءً على جدول المصاريف المرفق"
+          }
+        ];
+
+        let appState = {
+            tasks: [],
+            lookups: JSON.parse(JSON.stringify(DEFAULT_LOOKUPS)),
+            auditLogs: [],
+            notifications: [],
+            notificationOwnerKey: '',
+            activeTab: 'dashboard',
+            viewMode: 'table',
+            sortBy: 'deadline-asc',
+            searchTerm: '',
+            quickFilter: '',
+            filters: { department: '', status: '', priority: '', budget: '', dateFrom: '', dateTo: '' }
+        };
+
+        let chartStatusInstance = null;
+        let chartDepartmentInstance = null;
+        let chartBudgetInstance = null;
+        let chartPriorityInstance = null;
+
+        window.onload = function() {
+            document.addEventListener('click', handleDelegatedClick);
+            loadFromLocalStorage();
+            populateSelectDropdowns();
+            renderAllViews();
+            init3dHoverEffects();
+            showToast('أهلاً بك في نظام Task Tracker 3.0 Neo-Futuristic', 'info');
+        };
+
+        /* Floating 3D Toast System */
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const styles = {
+                success: 'bg-emerald-950/90 border-emerald-500/50 text-emerald-200 shadow-emerald-500/20',
+                error: 'bg-rose-950/90 border-rose-500/50 text-rose-200 shadow-rose-500/20',
+                warning: 'bg-amber-950/90 border-amber-500/50 text-amber-200 shadow-amber-500/20',
+                info: 'bg-cyan-950/90 border-cyan-500/50 text-cyan-200 shadow-cyan-500/20'
+            };
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-xmark text-rose-400',
+                warning: 'fa-triangle-exclamation text-amber-400',
+                info: 'fa-atom text-cyan-400'
+            };
+
+            toast.className = `toast-enter glass-3d px-4 py-3.5 rounded-2xl border text-xs flex items-center gap-3.5 shadow-2xl backdrop-blur-xl pointer-events-auto ${styles[type] || styles.info}`;
+            toast.innerHTML = `
+                <div class="w-8 h-8 rounded-xl bg-slate-900/80 flex items-center justify-center font-bold">
+                    <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
+                </div>
+                <span class="font-bold flex-1">${escapeHTML(message)}</span>
+                <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.replace('toast-enter', 'toast-exit');
+                setTimeout(() => toast.remove(), 300);
+            }, 3800);
+        }
+
+        function getNotificationStorageKey() {
+            const user = typeof currentUser !== 'undefined' ? currentUser : null;
+            const identity = user ? (user.id || user.email || user.displayName || 'user') : 'local';
+            return `ttp_notifications_${encodeURIComponent(String(identity))}`;
+        }
+
+        function ensureNotificationsLoaded() {
+            const storageKey = getNotificationStorageKey();
+            if (appState.notificationOwnerKey === storageKey) return;
+            appState.notificationOwnerKey = storageKey;
+            try {
+                const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
+                appState.notifications = Array.isArray(saved)
+                    ? saved.filter(item => item && typeof item.id === 'string' && typeof item.title === 'string' && typeof item.message === 'string')
+                    : [];
+            } catch (error) {
+                console.error('تعذر تحميل الإشعارات المحفوظة:', error);
+                appState.notifications = [];
+            }
+        }
+
+        function persistNotifications() {
+            try {
+                localStorage.setItem(appState.notificationOwnerKey || getNotificationStorageKey(), JSON.stringify(appState.notifications));
+            } catch (error) {
+                console.error('تعذر حفظ الإشعارات:', error);
+                showToast('تعذر حفظ الإشعارات على هذا الجهاز', 'error');
+            }
+        }
+
+        function addNotification(title, message, type = 'info', taskId = '', notificationId = '') {
+            ensureNotificationsLoaded();
+            const id = notificationId || `notice-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            if (appState.notifications.some(item => item.id === id)) return;
+            appState.notifications.unshift({
+                id,
+                title,
+                message,
+                type,
+                taskId,
+                createdAt: new Date().toISOString(),
+                read: false
+            });
+            appState.notifications = appState.notifications.slice(0, 100);
+            persistNotifications();
+            renderNotificationCenter();
+        }
+
+        function syncTaskNotifications() {
+            const existing = new Set(appState.notifications.map(item => item.id));
+            const pending = [];
+            const addIfMissing = (id, title, message, type, taskId) => {
+                if (!existing.has(id)) {
+                    existing.add(id);
+                    pending.push({ id, title, message, type, taskId, createdAt: new Date().toISOString(), read: false });
+                }
+            };
+
+            appState.tasks.forEach(task => {
+                const active = !['Completed', 'Cancelled'].includes(task.status);
+                const taskId = String(task.id || '');
+                const taskName = String(task.name || taskId);
+                const daysRemaining = calculateRemainingDays(task.deadline);
+                if (active && isTaskOverdue(task)) {
+                    addIfMissing(`overdue:${taskId}`, 'مهمة متأخرة', `تجاوزت المهمة «${taskName}» موعدها النهائي.`, 'error', taskId);
+                } else if (active && task.deadline && daysRemaining >= 0 && daysRemaining <= 3) {
+                    addIfMissing(`deadline:${taskId}:${task.deadline}`, 'موعد تسليم قريب', `تبقى ${daysRemaining} يوم على موعد «${taskName}».`, 'warning', taskId);
+                }
+                if (active && task.priority === 'Critical') {
+                    addIfMissing(`critical:${taskId}`, 'مهمة بأولوية حرجة', `تحتاج المهمة «${taskName}» إلى متابعة عاجلة.`, 'error', taskId);
+                }
+                if (Number(task.actualSpend || 0) > Number(task.budget || 0) && Number(task.actualSpend || 0) > 0) {
+                    addIfMissing(`budget:${taskId}`, 'تجاوز الميزانية', `تجاوز الإنفاق المسجل ميزانية المهمة «${taskName}».`, 'warning', taskId);
+                }
+            });
+
+            if (pending.length) {
+                appState.notifications = [...pending.reverse(), ...appState.notifications].slice(0, 100);
+                persistNotifications();
+            }
+        }
+
+        function renderNotificationCenter() {
+            const list = document.getElementById('notification-list');
+            if (!list) return;
+            const unreadCount = appState.notifications.filter(item => !item.read).length;
+            const badge = document.getElementById('notification-unread-badge');
+            badge.textContent = unreadCount > 99 ? '99+' : String(unreadCount);
+            badge.classList.toggle('hidden', unreadCount === 0);
+            badge.classList.toggle('flex', unreadCount > 0);
+            document.getElementById('notification-summary').textContent =
+                unreadCount ? `${unreadCount} غير مقروء من ${appState.notifications.length}` : `${appState.notifications.length} إشعار`;
+
+            const icons = {
+                error: 'fa-triangle-exclamation text-rose-300',
+                warning: 'fa-clock text-amber-300',
+                success: 'fa-circle-check text-emerald-300',
+                info: 'fa-circle-info text-cyan-300'
+            };
+            list.innerHTML = appState.notifications.length
+                ? appState.notifications.map(item => `
+                    <article class="flex items-start gap-2 rounded-xl p-2.5 ${item.read ? 'bg-slate-900/40' : 'bg-cyan-950/30 border border-cyan-500/15'}">
+                        <span class="mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-slate-900">
+                            <i class="fa-solid ${icons[item.type] || icons.info} text-xs"></i>
+                        </span>
+                        <button type="button" data-notification-action="open" data-notification-id="${escapeHTML(item.id)}" class="min-w-0 flex-1 text-right">
+                            <span class="block text-xs font-black text-slate-100">${escapeHTML(item.title)}</span>
+                            <span class="mt-1 block text-[10px] leading-relaxed text-slate-300">${escapeHTML(item.message)}</span>
+                            <span class="mt-1 block text-[9px] text-slate-500">${escapeHTML(new Date(item.createdAt).toLocaleString('ar-DZ'))}</span>
+                        </button>
+                        ${item.read ? '' : `<button type="button" data-notification-action="read" data-notification-id="${escapeHTML(item.id)}" class="p-1 text-slate-500 hover:text-cyan-300" title="تحديد كمقروء"><i class="fa-solid fa-check text-xs"></i></button>`}
+                    </article>
+                `).join('')
+                : '<p class="p-6 text-center text-xs text-slate-400">لا توجد إشعارات حالياً</p>';
+        }
+
+        function toggleNotificationCenter() {
+            const panel = document.getElementById('notification-panel');
+            const isOpening = panel.classList.contains('hidden');
+            if (isOpening) {
+                document.body.appendChild(panel);
+                panel.style.position = 'fixed';
+                panel.style.left = '16px';
+                panel.style.right = 'auto';
+                panel.style.top = '16px';
+                panel.classList.remove('hidden');
+            } else {
+                panel.classList.add('hidden');
+            }
+            document.getElementById('notification-toggle').setAttribute('aria-expanded', String(isOpening));
+            if (isOpening) {
+                renderNotificationCenter();
+                const buttonRect = document.getElementById('notification-toggle').getBoundingClientRect();
+                const panelRect = panel.getBoundingClientRect();
+                const left = Math.max(16, Math.min(buttonRect.right - panelRect.width, window.innerWidth - panelRect.width - 16));
+                const top = Math.max(16, Math.min(buttonRect.bottom + 12, window.innerHeight - panelRect.height - 16));
+                panel.style.left = `${left}px`;
+                panel.style.top = `${top}px`;
+            }
+        }
+
+        function closeNotificationCenter() {
+            document.getElementById('notification-panel').classList.add('hidden');
+            document.getElementById('notification-toggle').setAttribute('aria-expanded', 'false');
+        }
+
+        function handleNotificationAction(action, notificationId) {
+            if (action === 'read-all') {
+                appState.notifications.forEach(item => { item.read = true; });
+                persistNotifications();
+                renderNotificationCenter();
+                return;
+            }
+            if (action === 'clear') {
+                appState.notifications = [];
+                persistNotifications();
+                renderNotificationCenter();
+                return;
+            }
+
+            const notification = appState.notifications.find(item => item.id === notificationId);
+            if (!notification) return;
+            notification.read = true;
+            persistNotifications();
+            if (action !== 'open') {
+                renderNotificationCenter();
+                return;
+            }
+
+            closeNotificationCenter();
+            if (!notification.taskId || !appState.tasks.some(task => String(task.id) === String(notification.taskId))) return;
+            ['filter-dept', 'filter-status', 'filter-priority', 'filter-budget', 'filter-date-from', 'filter-date-to'].forEach(id => {
+                const field = document.getElementById(id);
+                if (field) field.value = '';
+            });
+            appState.filters = { department: '', status: '', priority: '', budget: '', dateFrom: '', dateTo: '' };
+            appState.quickFilter = '';
+            appState.searchTerm = String(notification.taskId).toLowerCase();
+            document.getElementById('global-search').value = notification.taskId;
+            switchTab('tasks');
+            renderTasksView();
+        }
+
+        /* 3D Tilt Effect on mouse move for cards */
+        function init3dHoverEffects() {
+            document.querySelectorAll('.glass-3d-hover').forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (centerY - y) / 12;
+                    const rotateY = (x - centerX) / 12;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
+                });
+            });
+        }
+
+        function logActivity(action, details) {
+            const entry = {
+                id: 'LOG-' + Date.now(),
+                timestamp: new Date().toLocaleString('ar-EG'),
+                action: action,
+                details: details
+            };
+            appState.auditLogs.unshift(entry);
+            saveToLocalStorage();
+        }
+
+        function handleDelegatedClick(event) {
+            if (!event.target.closest('#notification-center') && !event.target.closest('#notification-panel')) closeNotificationCenter();
+            const notificationButton = event.target.closest('[data-notification-action]');
+            if (notificationButton) {
+                handleNotificationAction(notificationButton.dataset.notificationAction, notificationButton.dataset.notificationId || '');
+                return;
+            }
+
+            const taskButton = event.target.closest('[data-action]');
+            if (taskButton) {
+                const taskId = taskButton.dataset.taskId;
+                if (taskButton.dataset.action === 'edit') openTaskModal(taskId);
+                if (taskButton.dataset.action === 'delete') deleteTask(taskId);
+                if (taskButton.dataset.action === 'progress') quickUpdateProgress(taskId);
+                return;
+            }
+
+            const settingButton = event.target.closest('[data-setting-action="delete"]');
+            if (settingButton) deleteSettingItem(settingButton.dataset.settingType, settingButton.dataset.settingValue);
+        }
+
+        function normalizeLookups(source) {
+            const result = {};
+            Object.keys(DEFAULT_LOOKUPS).forEach(key => {
+                const values = source && Array.isArray(source[key])
+                    ? [...new Set(source[key].filter(value => typeof value === 'string').map(value => value.trim()).filter(Boolean))]
+                    : [];
+                result[key] = values.length ? values : [...DEFAULT_LOOKUPS[key]];
+            });
+            return result;
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const savedTasks = localStorage.getItem('dept_tasks_data');
+                appState.tasks = savedTasks ? JSON.parse(savedTasks) : JSON.parse(JSON.stringify(INJECTED_TASKS));
+            } catch (error) { appState.tasks = JSON.parse(JSON.stringify(INJECTED_TASKS)); }
+
+            try {
+                const savedLookups = localStorage.getItem('dept_tasks_lookups');
+                appState.lookups = normalizeLookups(savedLookups ? JSON.parse(savedLookups) : null);
+            } catch (error) { appState.lookups = normalizeLookups(null); }
+
+            try {
+                const savedLogs = localStorage.getItem('dept_tasks_audit');
+                appState.auditLogs = savedLogs ? JSON.parse(savedLogs) : [];
+            } catch (error) { appState.auditLogs = []; }
+            saveToLocalStorage();
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('dept_tasks_data', JSON.stringify(appState.tasks));
+                localStorage.setItem('dept_tasks_lookups', JSON.stringify(appState.lookups));
+                localStorage.setItem('dept_tasks_audit', JSON.stringify(appState.auditLogs));
+            } catch (e) {}
+        }
+
+        function resetToSampleData() {
+            appState.tasks = JSON.parse(JSON.stringify(INJECTED_TASKS));
+            appState.lookups = normalizeLookups(DEFAULT_LOOKUPS);
+            appState.auditLogs = [];
+            logActivity('ضبط المصنع', 'إرجاع النظام للبيانات الافتراضية كاملة (30 مهمة)');
+            saveToLocalStorage();
+            populateSelectDropdowns();
+            renderAllViews();
+            showToast('تمت استعادة كافة البيانات والـ 30 مهمة بنجاح', 'success');
+        }
+
+        function renderAllViews() {
+            ensureNotificationsLoaded();
+            syncTaskNotifications();
+            renderNotificationCenter();
+            updateBadgeCounts();
+            checkUrgentAlerts();
+            renderQuickFilterBar();
+            renderDashboardData();
+            renderTasksView();
+            renderGanttChart();
+            renderAuditLogs();
+            renderSettingsView();
+            setTimeout(init3dHoverEffects, 200);
+        }
+
+        function checkUrgentAlerts() {
+            const overdue = appState.tasks.filter(isTaskOverdue).length;
+            const critical = appState.tasks.filter(t => t.priority === 'Critical' && !['Completed', 'Cancelled'].includes(t.status)).length;
+            const banner = document.getElementById('alerts-banner');
+            const text = document.getElementById('alerts-text');
+
+            if (overdue > 0 || critical > 0) {
+                banner.classList.remove('hidden');
+                text.innerText = `يوجد ${critical} مهمة ذات أولوية قصوى و ${overdue} مهمة متأخرة عن تاريخ التسليم المخصص!`;
+            } else { banner.classList.add('hidden'); }
+        }
+
+        function renderQuickFilterBar() {
+            const container = document.getElementById('quick-filter-bar');
+            if (!container) return;
+
+            const filters = [
+                { key: '', label: 'الكل', icon: 'fa-list' },
+                { key: 'urgent', label: 'حرج/عاجل', icon: 'fa-bolt' },
+                { key: 'overdue', label: 'متأخرة', icon: 'fa-clock' },
+                { key: 'due-soon', label: 'هذا الأسبوع', icon: 'fa-calendar-week' },
+                { key: 'attention', label: 'تحتاج متابعة', icon: 'fa-clipboard-check' },
+                { key: 'savings', label: 'وفر مالي', icon: 'fa-wallet' }
+            ];
+
+            container.innerHTML = filters.map(({ key, label, icon }) => {
+                const active = appState.quickFilter === key;
+                const count = key ? getFilteredTasksByQuickFilter(key).length : appState.tasks.length;
+                return `
+                    <button type="button" data-quick-filter="${escapeHTML(key)}" class="quick-filter-btn inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-[11px] font-bold transition ${active ? 'bg-cyan-500/15 border-cyan-500/40 text-cyan-200 shadow-lg shadow-cyan-500/10' : 'bg-slate-900/70 border-slate-800 text-slate-300 hover:border-slate-700 hover:text-white'}">
+                        <i class="fa-solid ${icon}"></i>
+                        ${escapeHTML(label)}
+                        <span class="min-w-5 h-5 rounded-full bg-slate-800 text-[10px] flex items-center justify-center">${count}</span>
+                    </button>`;
+            }).join('');
+
+            container.querySelectorAll('.quick-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => applyQuickFilter(btn.dataset.quickFilter || ''));
+            });
+        }
+
+        function getFilteredTasksByQuickFilter(key) {
+            if (!key) return appState.tasks;
+            return appState.tasks.filter(task => {
+                const isOpen = !['Completed', 'Cancelled'].includes(task.status);
+                if (key === 'urgent') return isOpen && (task.priority === 'Critical' || task.status === 'Blocked');
+                if (key === 'overdue') return isTaskOverdue(task);
+                if (key === 'due-soon') {
+                    const daysLeft = calculateRemainingDays(task.deadline);
+                    return Boolean(task.deadline) && isOpen && daysLeft >= 0 && daysLeft <= 7;
+                }
+                if (key === 'attention') return ['To Do', 'In Progress', 'Pending'].includes(task.status) && (task.progress < 50 || calculateRemainingDays(task.deadline) <= 7);
+                if (key === 'savings') return Number(task.budget || 0) - Number(task.actualSpend || 0) >= 0;
+                return true;
+            });
+        }
+
+        function applyQuickFilter(key) {
+            appState.quickFilter = key;
+            renderQuickFilterBar();
+            renderTasksView();
+        }
+
+        function switchTab(tabId) {
+            appState.activeTab = tabId;
+            document.querySelectorAll('section[id^="view-"]').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-slate-800/80', 'text-white', 'border-cyan-500/30');
+                btn.classList.add('text-slate-400');
+            });
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) activeNav.classList.add('bg-slate-800/80', 'text-white', 'border-cyan-500/30');
+
+            const titles = {
+                'dashboard': 'لوحة التحكم والتليمتري 3.0',
+                'tasks': 'إدارة ومتابعة المهام والأقسام',
+                'gantt': 'المخطط الزمني التفاعلي (Gantt Chart)',
+                'audit': 'سجل النشاطات والمراجعات (Audit Trail)',
+                'settings': 'إدارة المرجعيات والقوائم المنسدلة'
+            };
+            document.getElementById('page-title').innerText = titles[tabId] || 'إدارة المهام';
+            if (tabId === 'dashboard') renderDashboardData();
+            if (tabId === 'gantt') renderGanttChart();
+            if (tabId === 'audit') renderAuditLogs();
+        }
+
+        function setTaskViewMode(mode) {
+            appState.viewMode = mode;
+            const btnTable = document.getElementById('btn-view-table');
+            const btnKanban = document.getElementById('btn-view-kanban');
+
+            if (mode === 'table') {
+                btnTable.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 text-white shadow-md';
+                btnKanban.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200';
+            } else {
+                btnKanban.className = 'px-4 py-2 rounded-xl text-xs font-bold bg-cyan-600 text-white shadow-md';
+                btnTable.className = 'px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-slate-200';
+            }
+            renderTasksView();
+        }
+
+        function escapeHTML(val) {
+            return String(val ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+        }
+
+        function populateSelectDropdowns() {
+            const fillOptions = (elemId, list, defaultLabel) => {
+                const select = document.getElementById(elemId);
+                if (!select) return;
+                let html = defaultLabel ? `<option value="">${escapeHTML(defaultLabel)}</option>` : '';
+                list.forEach(item => { html += `<option value="${escapeHTML(item)}">${escapeHTML(item)}</option>`; });
+                select.innerHTML = html;
+            };
+
+            fillOptions('filter-dept', appState.lookups.departments, 'جميع الأقسام');
+            fillOptions('filter-status', appState.lookups.statuses, 'جميع الحالات');
+            fillOptions('filter-priority', appState.lookups.priorities, 'جميع الأولويات');
+
+            fillOptions('task-department', appState.lookups.departments, false);
+            fillOptions('task-worktype', appState.lookups.workTypes, false);
+            fillOptions('task-location', appState.lookups.locations, false);
+            fillOptions('task-status', appState.lookups.statuses, false);
+            fillOptions('task-priority', appState.lookups.priorities, false);
+        }
+
+        function updateBadgeCounts() {
+            document.getElementById('badge-total-tasks').innerText = appState.tasks.length;
+        }
+
+        function calculateRemainingDays(deadlineStr) {
+            if (!deadlineStr) return 0;
+            const [y, m, d] = String(deadlineStr).split('-').map(Number);
+            if (!y || !m || !d) return 0;
+            const today = new Date(); today.setHours(0,0,0,0);
+            const deadline = new Date(y, m - 1, d);
+            return Math.round((deadline - today) / (1000 * 60 * 60 * 24));
+        }
+
+        function isTaskOverdue(task) {
+            return Boolean(task.deadline) && !['Completed', 'Cancelled'].includes(task.status) && calculateRemainingDays(task.deadline) < 0;
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'Completed': return 'bg-emerald-950/90 text-emerald-400 border-emerald-500/50 shadow-emerald-500/20';
+                case 'In Progress': return 'bg-sky-950/90 text-sky-400 border-sky-500/50 shadow-sky-500/20';
+                case 'Pending': return 'bg-amber-950/90 text-amber-400 border-amber-500/50 shadow-amber-500/20';
+                case 'Blocked': return 'bg-rose-950/90 text-rose-400 border-rose-500/50 shadow-rose-500/20';
+                case 'Cancelled': return 'bg-slate-900 text-slate-400 border-slate-800';
+                default: return 'bg-slate-800 text-slate-300';
+            }
+        }
+
+        function getPriorityBadgeClass(priority) {
+            switch(priority) {
+                case 'Critical': return 'bg-rose-600 text-white font-black shadow-md shadow-rose-600/40 animate-pulse';
+                case 'High': return 'bg-orange-600 text-white font-bold';
+                case 'Medium': return 'bg-amber-600 text-white font-semibold';
+                case 'Low': return 'bg-emerald-600 text-white';
+                default: return 'bg-slate-700 text-white';
+            }
+        }
+
+        function handleGlobalSearch(term) {
+            appState.searchTerm = term.trim().toLowerCase();
+            renderTasksView();
+        }
+
+        function applyFilters() {
+            appState.filters.department = document.getElementById('filter-dept').value;
+            appState.filters.status = document.getElementById('filter-status').value;
+            appState.filters.priority = document.getElementById('filter-priority').value;
+            appState.filters.budget = document.getElementById('filter-budget').value;
+            appState.filters.dateFrom = document.getElementById('filter-date-from').value;
+            appState.filters.dateTo = document.getElementById('filter-date-to').value;
+            renderTasksView();
+        }
+
+        function resetFilters() {
+            ['filter-dept','filter-status','filter-priority','filter-budget','filter-date-from','filter-date-to','global-search'].forEach(id => document.getElementById(id).value = '');
+            appState.searchTerm = '';
+            applyFilters();
+            showToast('تمت إعادة تعيين الفلاتر', 'info');
+        }
+
+        function getFilteredTasks() {
+            const term = String(appState.searchTerm || '').trim().toLowerCase();
+            const quickFilterMatches = appState.quickFilter
+                ? new Set(getFilteredTasksByQuickFilter(appState.quickFilter).map(task => task.id))
+                : null;
+            let result = appState.tasks.filter(t => {
+                const searchStr = `${t.id} ${t.name} ${t.department} ${t.owner} ${t.location} ${t.workType}`.toLowerCase();
+                const matchesSearch = !term || searchStr.includes(term);
+                const matchesDept = !appState.filters.department || t.department === appState.filters.department;
+                const matchesStatus = !appState.filters.status || t.status === appState.filters.status;
+                const matchesPriority = !appState.filters.priority || t.priority === appState.filters.priority;
+                const matchesQuickFilter = !quickFilterMatches || quickFilterMatches.has(t.id);
+
+                let matchesBudget = true;
+                const variance = Number(t.budget || 0) - Number(t.actualSpend || 0);
+                if (appState.filters.budget === 'savings') matchesBudget = variance >= 0;
+                if (appState.filters.budget === 'exceeded') matchesBudget = variance < 0;
+
+                let matchesDateFrom = !appState.filters.dateFrom || (t.deadline && t.deadline >= appState.filters.dateFrom);
+                let matchesDateTo = !appState.filters.dateTo || (t.deadline && t.deadline <= appState.filters.dateTo);
+
+                return matchesSearch && matchesDept && matchesStatus && matchesPriority && matchesBudget && matchesDateFrom && matchesDateTo && matchesQuickFilter;
+            });
+
+            result.sort((a, b) => {
+                if (appState.sortBy === 'deadline-asc') return (a.deadline || '').localeCompare(b.deadline || '');
+                if (appState.sortBy === 'deadline-desc') return (b.deadline || '').localeCompare(a.deadline || '');
+                if (appState.sortBy === 'progress-desc') return (b.progress || 0) - (a.progress || 0);
+                if (appState.sortBy === 'progress-asc') return (a.progress || 0) - (b.progress || 0);
+                if (appState.sortBy === 'created-desc') return (b.createdDate || '').localeCompare(a.createdDate || '');
+                return 0;
+            });
+
+            return result;
+        }
+
+        function setTaskSort(sortBy) { appState.sortBy = sortBy; renderTasksView(); }
+
+        function renderTasksView() {
+            if (appState.viewMode === 'table') {
+                document.getElementById('container-table-view').classList.remove('hidden');
+                document.getElementById('container-kanban-view').classList.add('hidden');
+                renderTasksTable();
+            } else {
+                document.getElementById('container-table-view').classList.add('hidden');
+                document.getElementById('container-kanban-view').classList.remove('hidden');
+                renderKanbanBoard();
+            }
+        }
+
+        function renderTasksTable() {
+            const filtered = getFilteredTasks();
+            const tbody = document.getElementById('tasks-table-body');
+            const noRow = document.getElementById('no-tasks-row');
+            tbody.innerHTML = '';
+
+            if (filtered.length === 0) {
+                noRow.classList.remove('hidden');
+            } else {
+                noRow.classList.add('hidden');
+                filtered.forEach(task => {
+                    const daysLeft = calculateRemainingDays(task.deadline);
+                    let daysClass = 'text-slate-400';
+                    if (task.status === 'Completed') daysClass = 'text-emerald-400 font-bold';
+                    else if (isTaskOverdue(task)) daysClass = 'text-rose-400 font-bold bg-rose-950/80 px-2 py-0.5 rounded-lg border border-rose-800';
+
+                    const variance = Number(task.budget || 0) - Number(task.actualSpend || 0);
+                    const progress = Math.min(100, Math.max(0, Number(task.progress) || 0));
+
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-slate-800/40 transition-colors border-b border-slate-800/60 font-medium';
+                    row.innerHTML = `
+                        <td class="p-4 font-mono text-cyan-400 font-bold">${escapeHTML(task.id)}</td>
+                        <td class="p-4 font-bold text-white">
+                            <div>${escapeHTML(task.name)}</div>
+                            ${task.blockers ? `<span class="inline-block text-[10px] text-rose-400 font-bold mt-1 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-900"><i class="fa-solid fa-triangle-exclamation"></i> ${escapeHTML(task.blockers)}</span>` : ''}
+                        </td>
+                        <td class="p-4 text-slate-300">
+                            <div class="font-bold">${escapeHTML(task.department)}</div>
+                            <span class="text-[10px] text-slate-500 font-semibold"><i class="fa-solid fa-location-dot"></i> ${escapeHTML(task.location || '-')}</span>
+                        </td>
+                        <td class="p-4 text-slate-300">${escapeHTML(task.workType || '-')}</td>
+                        <td class="p-4 text-slate-200 font-bold">${escapeHTML(task.owner)}</td>
+                        <td class="p-4"><span class="px-3 py-1 rounded-full text-[10px] ${getPriorityBadgeClass(task.priority)}">${escapeHTML(task.priority)}</span></td>
+                        <td class="p-4"><span class="px-3 py-1 rounded-xl text-[10px] font-bold border shadow-sm ${getStatusBadgeClass(task.status)}">${escapeHTML(task.status)}</span></td>
+                        <td class="p-4 w-36">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1 bg-slate-800 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                                    <div class="bg-gradient-to-r from-cyan-500 to-emerald-400 h-full rounded-full transition-all duration-300" style="width: ${progress}%"></div>
+                                </div>
+                                <span class="text-[10px] font-mono font-bold text-slate-300">${progress}%</span>
+                            </div>
+                        </td>
+                        <td class="p-4 font-mono text-[11px] text-slate-300">${escapeHTML(task.deadline || '-')}</td>
+                        <td class="p-4 text-[11px] font-mono ${daysClass}">${task.status === 'Completed' ? 'مكتمل' : (daysLeft < 0 ? `متأخر بـ ${Math.abs(daysLeft)} يوم` : `${daysLeft} يوم`)}</td>
+                        <td class="p-4 font-mono text-[11px]">
+                            <div class="text-white font-bold">${Number(task.budget || 0).toLocaleString()} DZD</div>
+                            <span class="text-[10px] ${variance >= 0 ? 'text-emerald-400' : 'text-rose-400'} font-semibold">وفر: ${variance.toLocaleString()} DZD</span>
+                        </td>
+                        <td class="p-4 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button data-action="progress" data-task-id="${escapeHTML(task.id)}" class="w-7 h-7 rounded-lg bg-emerald-950/80 text-emerald-400 hover:bg-emerald-800 transition flex items-center justify-center border border-emerald-800/60" title="تحديث نسبة الإنجاز"><i class="fa-solid fa-square-check"></i></button>
+                                <button data-action="edit" data-task-id="${escapeHTML(task.id)}" class="w-7 h-7 rounded-lg bg-cyan-950/80 text-cyan-400 hover:bg-cyan-800 transition flex items-center justify-center border border-cyan-800/60" title="تعديل"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button data-action="delete" data-task-id="${escapeHTML(task.id)}" class="w-7 h-7 rounded-lg bg-rose-950/80 text-rose-400 hover:bg-rose-800 transition flex items-center justify-center border border-rose-800/60" title="حذف"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            document.getElementById('tasks-count-info').innerText = `عرض ${filtered.length} من إجمالي ${appState.tasks.length} مهمة`;
+        }
+
+        function renderKanbanBoard() {
+            const container = document.getElementById('container-kanban-view');
+            container.innerHTML = '';
+            const filtered = getFilteredTasks();
+
+            appState.lookups.statuses.forEach(status => {
+                const tasksInStatus = filtered.filter(t => t.status === status);
+                const col = document.createElement('div');
+                col.className = 'kanban-col glass-3d rounded-3xl p-4 space-y-3 flex flex-col border transition-all duration-300';
+                col.dataset.status = status;
+
+                col.ondragover = (e) => { e.preventDefault(); col.classList.add('drag-over'); };
+                col.ondragleave = () => { col.classList.remove('drag-over'); };
+                col.ondrop = (e) => handleKanbanDrop(e, status, col);
+
+                col.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                        <span class="font-bold text-xs text-slate-100 flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400"></span>
+                            ${escapeHTML(status)}
+                        </span>
+                        <span class="text-[10px] font-mono bg-slate-900 text-cyan-400 px-2.5 py-1 rounded-full font-bold border border-cyan-500/30">${tasksInStatus.length}</span>
+                    </div>
+                    <div class="kanban-card-list space-y-3 flex-1 custom-scrollbar p-1">
+                        ${tasksInStatus.length ? tasksInStatus.map(t => `
+                            <div data-kanban-card data-task-id="${escapeHTML(t.id)}" draggable="true" class="kanban-card glass-3d p-4 rounded-2xl border space-y-3 cursor-grab active:cursor-grabbing">
+                                <div class="flex justify-between items-start">
+                                    <span class="font-mono text-[10px] text-cyan-400 font-bold bg-cyan-950/60 px-2 py-0.5 rounded border border-cyan-800/50">${escapeHTML(t.id)}</span>
+                                    <span class="px-2.5 py-0.5 rounded-full text-[9px] ${getPriorityBadgeClass(t.priority)}">${escapeHTML(t.priority)}</span>
+                                </div>
+                                <h4 class="font-bold text-xs text-white leading-snug">${escapeHTML(t.name)}</h4>
+                                <div class="text-[10px] text-slate-400 flex justify-between font-semibold">
+                                    <span>${escapeHTML(t.department)}</span>
+                                    <span class="text-slate-300"><i class="fa-solid fa-user-gear"></i> ${escapeHTML(t.owner)}</span>
+                                </div>
+                                <div class="bg-slate-950 h-2 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                                    <div class="bg-cyan-500 h-full rounded-full" style="width: ${t.progress || 0}%"></div>
+                                </div>
+                                <div class="flex justify-between items-center text-[10px] pt-2 border-t border-slate-800/80">
+                                    <span class="text-slate-400 font-mono"><i class="fa-solid fa-calendar text-cyan-400"></i> ${escapeHTML(t.deadline || '')}</span>
+                                    <button data-action="edit" data-task-id="${escapeHTML(t.id)}" class="text-cyan-400 font-bold hover:underline">تعديل</button>
+                                </div>
+                            </div>
+                        `).join('') : '<div class="rounded-2xl border border-dashed border-slate-700/80 p-6 text-center text-xs text-slate-500">لا توجد مهام في هذه المرحلة</div>'}
+                    </div>
+                `;
+                col.querySelectorAll('[data-kanban-card]').forEach(card => {
+                    const taskId = card.dataset.taskId;
+                    card.addEventListener('dragstart', event => handleKanbanDragStart(event, taskId));
+                    card.addEventListener('dragend', () => handleKanbanDragEnd(taskId));
+                });
+                container.appendChild(col);
+            });
+        }
+
+        function handleKanbanDragStart(e, taskId) {
+            e.dataTransfer.setData('text/plain', taskId);
+            const card = e.currentTarget;
+            if (card) card.classList.add('dragging');
+        }
+
+        function handleKanbanDragEnd(taskId) {
+            document.querySelectorAll('[data-kanban-card]').forEach(card => {
+                if (card.dataset.taskId === taskId) card.classList.remove('dragging');
+            });
+        }
+
+        function handleKanbanDrop(e, newStatus, columnElem) {
+            e.preventDefault();
+            columnElem.classList.remove('drag-over');
+            const taskId = e.dataTransfer.getData('text/plain');
+            const task = appState.tasks.find(t => t.id === taskId);
+            
+            if (task && task.status !== newStatus) {
+                const oldStatus = task.status;
+                task.status = newStatus;
+                if (newStatus === 'Completed') task.progress = 100;
+                
+                logActivity('تعديل حالة (كانبان 3D)', `تغيير حالة المهمة (${task.name}) من [${oldStatus}] إلى [${newStatus}]`);
+                saveToLocalStorage();
+                renderAllViews();
+                showToast(`تم تغيير حالة المهمة بنجاح إلى "${newStatus}"`, 'success');
+            }
+        }
+
+        function quickUpdateProgress(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (!task) return;
+            const oldStatus = task.status;
+            const newProg = prompt('أدخل نسبة الإنجاز الجديدة للمهمة (0 - 100):', task.progress);
+            if (newProg !== null && !isNaN(newProg)) {
+                const oldVal = task.progress;
+                task.progress = Math.min(100, Math.max(0, Number(newProg)));
+                if (task.progress === 100) task.status = 'Completed';
+                
+                logActivity('تحديث الإنجاز', `تحديث نسبة الإنجاز للمهمة (${task.name}) من ${oldVal}% إلى ${task.progress}%`);
+                saveToLocalStorage();
+                renderAllViews();
+                if (task.status !== oldStatus) addNotification('تغيرت حالة مهمة', `تم تغيير حالة «${task.name}» إلى ${task.status}.`, 'info', task.id);
+                showToast('تم تحديث نسبة الإنجاز وحفظ التغيرات', 'success');
+            }
+        }
+
+        function renderDashboardData() {
+            const tasks = appState.tasks;
+            const totalTasks = tasks.length;
+            const completedCount = tasks.filter(t => t.status === 'Completed').length;
+            const inProgressCount = tasks.filter(t => t.status === 'In Progress').length;
+            const activeTasks = tasks.filter(t => !['Completed', 'Cancelled'].includes(t.status));
+            const criticalCount = activeTasks.filter(t => t.priority === 'Critical').length;
+            const overdueCount = tasks.filter(isTaskOverdue).length;
+            const eligibleTasks = tasks.filter(t => t.status !== 'Cancelled');
+            const completionRate = eligibleTasks.length
+                ? Math.round((completedCount / eligibleTasks.length) * 100)
+                : 0;
+            const averageProgress = eligibleTasks.length
+                ? Math.round(eligibleTasks.reduce((sum, task) => sum + Number(task.progress || 0), 0) / eligibleTasks.length)
+                : 0;
+            const onTimeRate = activeTasks.length
+                ? Math.round(((activeTasks.length - overdueCount) / activeTasks.length) * 100)
+                : 0;
+
+            const totalBudget = tasks.reduce((sum, t) => sum + Number(t.budget || 0), 0);
+            const totalActual = tasks.reduce((sum, t) => sum + Number(t.actualSpend || 0), 0);
+            const budgetVariance = totalBudget - totalActual;
+
+            document.getElementById('kpi-total-tasks').innerText = totalTasks;
+            document.getElementById('kpi-completed-pct').innerText = completionRate + '%';
+            document.getElementById('kpi-in-progress').innerText = inProgressCount;
+            document.getElementById('kpi-critical-count').innerText = criticalCount;
+            document.getElementById('kpi-on-time-rate').innerText = onTimeRate + '%';
+            document.getElementById('kpi-overdue-count').innerText = overdueCount;
+
+            document.getElementById('kpi-total-budget').innerText = totalBudget.toLocaleString() + ' DZD';
+            document.getElementById('kpi-budget-utilization').innerText = `الإنفاق: ${totalBudget > 0 ? Math.round((totalActual / totalBudget) * 100) : 0}% من الميزانية`;
+            const varElem = document.getElementById('kpi-budget-variance');
+            varElem.innerText = budgetVariance >= 0 ? `الوفر الصافي: ${budgetVariance.toLocaleString()} DZD` : `تجاوز الإنفاق: ${Math.abs(budgetVariance).toLocaleString()} DZD`;
+            varElem.className = budgetVariance >= 0 ? 'text-xs font-bold mt-2 text-emerald-400' : 'text-xs font-bold mt-2 text-rose-400';
+
+            document.getElementById('executive-progress-label').innerText = averageProgress + '%';
+            document.getElementById('executive-progress-bar').style.width = `${averageProgress}%`;
+            document.getElementById('executive-date').innerText = new Date().toLocaleDateString('ar-DZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            renderExecutiveActions(activeTasks, criticalCount, overdueCount);
+            initCharts();
+        }
+
+        function renderExecutiveActions(activeTasks, criticalCount, overdueCount) {
+            const dueSoonCount = getFilteredTasksByQuickFilter('due-soon').length;
+            const blockedCount = activeTasks.filter(task => task.status === 'Blocked').length;
+            document.getElementById('executive-summary').innerText = activeTasks.length
+                ? `${activeTasks.length} مهمة مفتوحة، منها ${criticalCount} حرجة و${blockedCount} محجوبة. ${overdueCount} متأخرة و${dueSoonCount} تستحق المتابعة خلال 7 أيام.`
+                : 'لا توجد مهام مفتوحة حالياً. جميع المهام مكتملة أو ملغاة.';
+
+            const actionGroups = [
+                { key: 'urgent', label: 'حرجة أو محجوبة', count: getFilteredTasksByQuickFilter('urgent').length, icon: 'fa-triangle-exclamation', colorClass: 'border-rose-500/20 bg-rose-950/20 hover:bg-rose-950/40', iconClass: 'bg-rose-500/10 text-rose-300' },
+                { key: 'overdue', label: 'متأخرة عن الموعد', count: overdueCount, icon: 'fa-clock', colorClass: 'border-amber-500/20 bg-amber-950/20 hover:bg-amber-950/40', iconClass: 'bg-amber-500/10 text-amber-300' },
+                { key: 'due-soon', label: 'تستحق خلال 7 أيام', count: dueSoonCount, icon: 'fa-calendar-day', colorClass: 'border-cyan-500/20 bg-cyan-950/20 hover:bg-cyan-950/40', iconClass: 'bg-cyan-500/10 text-cyan-300' }
+            ];
+            document.getElementById('executive-action-cards').innerHTML = actionGroups.map(group => `
+                <button type="button" data-executive-filter="${group.key}" class="w-full text-right flex items-center justify-between gap-3 p-3.5 rounded-2xl border ${group.colorClass} transition group">
+                    <span class="flex items-center gap-3 min-w-0">
+                        <span class="w-9 h-9 shrink-0 rounded-xl ${group.iconClass} flex items-center justify-center"><i class="fa-solid ${group.icon}"></i></span>
+                        <span class="text-xs font-bold text-slate-200 truncate">${group.label}</span>
+                    </span>
+                    <span class="flex items-center gap-2 shrink-0">
+                        <span class="font-mono font-black text-white">${group.count}</span>
+                        <i class="fa-solid fa-chevron-left text-[10px] text-slate-500 group-hover:text-white"></i>
+                    </span>
+                </button>`).join('');
+            document.querySelectorAll('[data-executive-filter]').forEach(button => {
+                button.addEventListener('click', () => {
+                    switchTab('tasks');
+                    applyQuickFilter(button.dataset.executiveFilter);
+                });
+            });
+
+            const priorityRank = task => task.priority === 'Critical' ? 0 : task.priority === 'High' ? 1 : task.priority === 'Medium' ? 2 : 3;
+            const actions = activeTasks
+                .filter(task => isTaskOverdue(task) || task.priority === 'Critical' || task.status === 'Blocked' || (calculateRemainingDays(task.deadline) >= 0 && calculateRemainingDays(task.deadline) <= 7))
+                .sort((a, b) => {
+                    const urgencyA = isTaskOverdue(a) ? 0 : a.status === 'Blocked' ? 1 : priorityRank(a);
+                    const urgencyB = isTaskOverdue(b) ? 0 : b.status === 'Blocked' ? 1 : priorityRank(b);
+                    return urgencyA - urgencyB || (a.deadline || '').localeCompare(b.deadline || '');
+                })
+                .slice(0, 4);
+            const actionList = document.getElementById('executive-priority-list');
+            actionList.innerHTML = actions.length ? actions.map(task => {
+                const daysLeft = calculateRemainingDays(task.deadline);
+                const alertLabel = isTaskOverdue(task) ? `متأخرة ${Math.abs(daysLeft)} يوم` : task.status === 'Blocked' ? 'محجوبة' : task.priority === 'Critical' ? 'حرجة' : `الموعد خلال ${daysLeft} يوم`;
+                const alertColor = isTaskOverdue(task) || task.status === 'Blocked' || task.priority === 'Critical' ? 'text-rose-300 bg-rose-950/50 border-rose-800/50' : 'text-amber-300 bg-amber-950/40 border-amber-800/50';
+                return `<div class="flex items-center gap-3 p-3 rounded-2xl bg-slate-950/45 border border-slate-800/70 hover:border-slate-700 transition">
+                    <span class="w-9 h-9 shrink-0 rounded-xl bg-slate-900 text-cyan-300 flex items-center justify-center"><i class="fa-solid fa-list-check"></i></span>
+                    <div class="min-w-0 flex-1">
+                        <p class="text-xs font-bold text-slate-100 truncate">${escapeHTML(task.name)}</p>
+                        <p class="text-[10px] text-slate-500 mt-1">${escapeHTML(task.id)} · ${escapeHTML(task.owner || 'بدون مسؤول')}</p>
+                    </div>
+                    <span class="hidden sm:inline-flex px-2 py-1 rounded-lg border text-[10px] font-bold whitespace-nowrap ${alertColor}">${escapeHTML(alertLabel)}</span>
+                    <button type="button" data-action="edit" data-task-id="${escapeHTML(task.id)}" class="w-8 h-8 shrink-0 rounded-lg border border-slate-700 text-slate-300 hover:text-cyan-300 hover:border-cyan-500/40 transition" aria-label="فتح المهمة ${escapeHTML(task.name)}"><i class="fa-solid fa-arrow-up-right-from-square text-[11px]"></i></button>
+                </div>`;
+            }).join('') : '<div class="text-center rounded-2xl border border-emerald-500/15 bg-emerald-950/15 px-4 py-8 text-sm font-bold text-emerald-300"><i class="fa-solid fa-circle-check ml-2"></i>لا توجد إجراءات عاجلة. العمل يسير بشكل جيد.</div>';
+        }
+
+        function initCharts() {
+            const tasks = appState.tasks;
+            const textColor = '#94a3b8';
+            const gridColor = 'rgba(255, 255, 255, 0.05)';
+
+            const statusCounts = {};
+            appState.lookups.statuses.forEach(s => statusCounts[s] = 0);
+            tasks.forEach(t => { statusCounts[t.status] = (statusCounts[t.status] || 0) + 1; });
+
+            if (chartStatusInstance) chartStatusInstance.destroy();
+            chartStatusInstance = new Chart(document.getElementById('chartStatus'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#64748b', '#06b6d4', '#f59e0b', '#f43f5e', '#10b981', '#334155'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: textColor, font: { family: 'Cairo' } } } } }
+            });
+
+            const deptCounts = {};
+            appState.lookups.departments.slice(0, 6).forEach(d => deptCounts[d] = 0);
+            tasks.forEach(t => { if (deptCounts[t.department] !== undefined) deptCounts[t.department]++; });
+
+            if (chartDepartmentInstance) chartDepartmentInstance.destroy();
+            chartDepartmentInstance = new Chart(document.getElementById('chartDepartment'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(deptCounts),
+                    datasets: [{
+                        label: 'عدد المهام',
+                        data: Object.values(deptCounts),
+                        backgroundColor: '#a855f7',
+                        borderRadius: 10
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { ticks: { color: textColor }, grid: { color: gridColor } }, y: { ticks: { color: textColor }, grid: { color: gridColor } } } }
+            });
+
+            const deptBudgets = {}; const deptActuals = {};
+            appState.lookups.departments.slice(0, 5).forEach(d => { deptBudgets[d] = 0; deptActuals[d] = 0; });
+            tasks.forEach(t => {
+                if (deptBudgets[t.department] !== undefined) {
+                    deptBudgets[t.department] += Number(t.budget || 0);
+                    deptActuals[t.department] += Number(t.actualSpend || 0);
+                }
+            });
+
+            if (chartBudgetInstance) chartBudgetInstance.destroy();
+            chartBudgetInstance = new Chart(document.getElementById('chartBudget'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(deptBudgets),
+                    datasets: [
+                        { label: 'الميزانية المخططة', data: Object.values(deptBudgets), backgroundColor: '#06b6d4', borderRadius: 8 },
+                        { label: 'الإنفاق الفعلي', data: Object.values(deptActuals), backgroundColor: '#ec4899', borderRadius: 8 }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: textColor } } }, scales: { x: { ticks: { color: textColor }, grid: { color: gridColor } }, y: { ticks: { color: textColor }, grid: { color: gridColor } } } }
+            });
+
+            const priorityCounts = {};
+            appState.lookups.priorities.forEach(p => priorityCounts[p] = 0);
+            tasks.forEach(t => { priorityCounts[t.priority] = (priorityCounts[t.priority] || 0) + 1; });
+
+            if (chartPriorityInstance) chartPriorityInstance.destroy();
+            chartPriorityInstance = new Chart(document.getElementById('chartPriority'), {
+                type: 'polarArea',
+                data: {
+                    labels: Object.keys(priorityCounts),
+                    datasets: [{
+                        data: Object.values(priorityCounts),
+                        backgroundColor: ['rgba(244, 63, 94, 0.8)', 'rgba(249, 115, 22, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(16, 185, 129, 0.8)'],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: textColor } } }, scales: { r: { grid: { color: gridColor }, ticks: { backdropColor: 'transparent', color: textColor } } } }
+            });
+        }
+
+        function renderGanttChart() {
+            const wrapper = document.getElementById('gantt-chart-wrapper');
+            wrapper.innerHTML = '';
+
+            if (appState.tasks.length === 0) {
+                wrapper.innerHTML = '<p class="text-center text-slate-500 py-8 font-bold">لا توجد مهام لعرض المخطط</p>';
+                return;
+            }
+
+            appState.tasks.forEach(task => {
+                const isOverdue = isTaskOverdue(task);
+                const progress = Math.min(100, Math.max(0, Number(task.progress) || 0));
+
+                let barColor = 'bg-gradient-to-r from-cyan-500 to-sky-400';
+                if (task.status === 'Completed') barColor = 'bg-gradient-to-r from-emerald-500 to-teal-400';
+                if (isOverdue || task.priority === 'Critical') barColor = 'bg-gradient-to-r from-rose-600 to-pink-500';
+
+                const row = document.createElement('div');
+                row.className = 'space-y-2 p-4 rounded-2xl glass-3d border border-slate-800/80 hover:border-cyan-500/40 transition';
+                row.innerHTML = `
+                    <div class="flex flex-wrap items-center justify-between text-xs gap-2">
+                        <div class="font-bold text-white flex items-center gap-2.5">
+                            <span class="font-mono text-cyan-400 text-xs bg-cyan-950/80 px-2 py-0.5 rounded border border-cyan-800">${escapeHTML(task.id)}</span>
+                            <span>${escapeHTML(task.name)}</span>
+                            <span class="text-[10px] text-slate-400 font-normal">(${escapeHTML(task.department)})</span>
+                        </div>
+                        <div class="flex items-center gap-4 text-[11px] font-mono">
+                            <span class="text-slate-400">البداية: <strong class="text-slate-200">${escapeHTML(task.startDate || 'غير محدد')}</strong></span>
+                            <span class="text-slate-400">النهاية: <strong class="text-slate-200">${escapeHTML(task.deadline || 'غير محدد')}</strong></span>
+                            <span class="font-bold text-cyan-400">${progress}% إنجاز</span>
+                        </div>
+                    </div>
+                    <div class="relative w-full bg-slate-900/90 h-4 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                        <div class="${barColor} h-full rounded-full transition-all duration-500 flex items-center justify-end px-2 shadow-lg" style="width: ${progress}%">
+                            ${progress > 12 ? `<span class="text-[9px] font-black text-white font-mono">${progress}%</span>` : ''}
+                        </div>
+                    </div>
+                `;
+                wrapper.appendChild(row);
+            });
+        }
+
+        function renderAuditLogs() {
+            const container = document.getElementById('audit-log-container');
+            container.innerHTML = '';
+
+            if (appState.auditLogs.length === 0) {
+                container.innerHTML = '<p class="text-center text-slate-500 py-8 font-bold text-xs">لا يوجد نشاط مسجل حتى الآن</p>';
+                return;
+            }
+
+            appState.auditLogs.forEach(log => {
+                const item = document.createElement('div');
+                item.className = 'p-3.5 rounded-2xl glass-3d border border-slate-800/80 text-xs flex items-start gap-3.5';
+                item.innerHTML = `
+                    <div class="w-9 h-9 rounded-xl bg-cyan-950/80 text-cyan-400 flex items-center justify-center font-bold border border-cyan-800/60 flex-shrink-0">
+                        <i class="fa-solid fa-bolt text-sm"></i>
+                    </div>
+                    <div class="flex-1 space-y-1">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-white">${escapeHTML(log.action)}</span>
+                            <span class="text-[10px] text-slate-400 font-mono">${escapeHTML(log.timestamp)}</span>
+                        </div>
+                        <p class="text-slate-300 text-[11px]">${escapeHTML(log.details)}</p>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function clearAuditLog() {
+            if (confirm('هل أنت متأكد من مسح جميع سجلات الأنشطة والتعديلات؟')) {
+                appState.auditLogs = [];
+                saveToLocalStorage();
+                renderAuditLogs();
+                showToast('تم مسح سجل النشاطات', 'info');
+            }
+        }
+
+        function renderSettingsView() {
+            const renderBadges = (elemId, list, type) => {
+                const box = document.getElementById(elemId); box.innerHTML = '';
+                list.forEach(item => {
+                    const tag = document.createElement('span');
+                    tag.className = 'bg-slate-900/90 text-slate-200 text-xs px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-2 font-bold';
+                    tag.innerHTML = `${escapeHTML(item)} <button data-setting-action="delete" data-setting-type="${escapeHTML(type)}" data-setting-value="${escapeHTML(item)}" class="text-slate-500 hover:text-rose-400"><i class="fa-solid fa-xmark"></i></button>`;
+                    box.appendChild(tag);
+                });
+            };
+            renderBadges('settings-dept-list', appState.lookups.departments, 'departments');
+            renderBadges('settings-loc-list', appState.lookups.locations, 'locations');
+            renderBadges('settings-worktype-list', appState.lookups.workTypes, 'workTypes');
+        }
+
+        function addSettingItem(type, inputId) {
+            const input = document.getElementById(inputId);
+            const val = input.value.trim();
+            if (val && !appState.lookups[type].includes(val)) {
+                appState.lookups[type].push(val);
+                input.value = '';
+                logActivity('تعديل القوائم', `إضافة عنصر جديد [${val}] إلى قائمة (${type})`);
+                saveToLocalStorage(); populateSelectDropdowns(); renderSettingsView();
+                showToast('تمت إضافة العنصر بنجاح', 'success');
+            }
+        }
+
+        function deleteSettingItem(type, val) {
+            if (appState.lookups[type].length <= 1) { 
+                showToast('يجب الإبقاء على عنصر واحد على الأقل في القائمة', 'warning');
+                return; 
+            }
+            appState.lookups[type] = appState.lookups[type].filter(item => item !== val);
+            logActivity('تعديل القوائم', `حذف العنصر [${val}] من قائمة (${type})`);
+            saveToLocalStorage(); populateSelectDropdowns(); renderSettingsView();
+            showToast('تم حذف العنصر بنجاح', 'info');
+        }
+
+        function openTaskModal(taskId = null) {
+            const modal = document.getElementById('task-modal');
+            const form = document.getElementById('task-form');
+            form.reset();
+
+            if (taskId) {
+                const task = appState.tasks.find(t => t.id === taskId);
+                if (task) {
+                    document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-cyan-400"></i> تعديل تفاصيل المهمة';
+                    document.getElementById('task-id').value = task.id;
+                    document.getElementById('task-name').value = task.name;
+                    document.getElementById('task-department').value = task.department;
+                    document.getElementById('task-worktype').value = task.workType || '';
+                    document.getElementById('task-location').value = task.location || '';
+                    document.getElementById('task-owner').value = task.owner;
+                    document.getElementById('task-contributors').value = task.contributors || '';
+                    document.getElementById('task-priority').value = task.priority;
+                    document.getElementById('task-status').value = task.status;
+                    document.getElementById('task-startdate').value = task.startDate || '';
+                    document.getElementById('task-deadline').value = task.deadline || '';
+                    document.getElementById('task-progress').value = task.progress || 0;
+                    document.getElementById('progress-value-display').innerText = (task.progress || 0) + '%';
+                    document.getElementById('task-budget').value = task.budget || '';
+                    document.getElementById('task-actual').value = task.actualSpend || '';
+                    document.getElementById('task-blockers').value = task.blockers || '';
+                    document.getElementById('task-comments').value = task.comments || '';
+                }
+            } else {
+                document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-plus-circle text-cyan-400"></i> إضافة مهمة جديدة';
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-progress').value = 0;
+                document.getElementById('progress-value-display').innerText = '0%';
+            }
+
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0', 'scale-95'); }, 10);
+        }
+
+        function closeTaskModal() {
+            const modal = document.getElementById('task-modal');
+            modal.classList.add('opacity-0', 'scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 250);
+        }
+
+        function saveTask(e) {
+            e.preventDefault();
+            const taskId = document.getElementById('task-id').value;
+            const taskData = {
+                id: taskId || ('TSK-' + Math.floor(1000 + Math.random() * 9000)),
+                name: document.getElementById('task-name').value,
+                department: document.getElementById('task-department').value,
+                workType: document.getElementById('task-worktype').value,
+                location: document.getElementById('task-location').value,
+                owner: document.getElementById('task-owner').value,
+                contributors: document.getElementById('task-contributors').value,
+                priority: document.getElementById('task-priority').value,
+                status: document.getElementById('task-status').value,
+                createdDate: new Date().toISOString().split('T')[0],
+                startDate: document.getElementById('task-startdate').value,
+                deadline: document.getElementById('task-deadline').value,
+                progress: Number(document.getElementById('task-progress').value),
+                budget: Number(document.getElementById('task-budget').value || 0),
+                actualSpend: Number(document.getElementById('task-actual').value || 0),
+                blockers: document.getElementById('task-blockers').value,
+                comments: document.getElementById('task-comments').value
+            };
+            const previousTask = taskId ? appState.tasks.find(task => task.id === taskId) : null;
+
+            if (taskId) {
+                const index = appState.tasks.findIndex(t => t.id === taskId);
+                if (index !== -1) appState.tasks[index] = taskData;
+                logActivity('تعديل مهمة', `تحديث بيانات المهمة (${taskData.name}) [${taskData.id}]`);
+                showToast('تم حفظ التعديلات بنجاح', 'success');
+            } else {
+                appState.tasks.unshift(taskData);
+                logActivity('إضافة مهمة جديدة', `إضافة المهمة الجديدة (${taskData.name}) [${taskData.id}]`);
+                showToast('تمت إضافة المهمة بنجاح', 'success');
+            }
+
+            saveToLocalStorage(); closeTaskModal(); renderAllViews();
+            if (!taskId) {
+                addNotification('مهمة جديدة', `تمت إضافة المهمة «${taskData.name}».`, 'success', taskData.id);
+            } else if (previousTask && previousTask.status !== taskData.status) {
+                addNotification('تغيرت حالة مهمة', `تم تغيير حالة «${taskData.name}» إلى ${taskData.status}.`, 'info', taskData.id);
+            } else {
+                addNotification('تم تحديث مهمة', `تم حفظ التعديلات على «${taskData.name}».`, 'info', taskData.id);
+            }
+        }
+
+        function deleteTask(taskId) {
+            const task = appState.tasks.find(t => t.id === taskId);
+            if (confirm('هل أنت متأكد من حذف هذه المهمة نهائياً؟')) {
+                appState.tasks = appState.tasks.filter(t => t.id !== taskId);
+                logActivity('حذف مهمة', `حذف المهمة (${task ? task.name : taskId})`);
+                saveToLocalStorage(); renderAllViews();
+                addNotification('تم حذف مهمة', `تم حذف «${task ? task.name : taskId}».`, 'info');
+                showToast('تم حذف المهمة نهائياً', 'info');
+            }
+        }
+
+        function openFinancialReport() {
+            const now = new Date();
+            const month = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+            const monthInput = document.getElementById('financial-report-month');
+            monthInput.value = month;
+            monthInput.onchange = renderFinancialReport;
+            renderFinancialReport();
+            const overlay = document.getElementById('financial-report-overlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+        }
+
+        function closeFinancialReport() {
+            const overlay = document.getElementById('financial-report-overlay');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+
+        function renderFinancialReport() {
+            const month = document.getElementById('financial-report-month').value;
+            if (!month) return;
+
+            const formatAmount = value => new Intl.NumberFormat('fr-DZ', { maximumFractionDigits: 0 }).format(value);
+            const toAmount = value => Number.isFinite(Number(value)) ? Number(value) : 0;
+            const reportTasks = appState.tasks
+                .filter(task => task.deadline && task.deadline.slice(0, 7) === month && (toAmount(task.budget) > 0 || toAmount(task.actualSpend) > 0))
+                .sort((a, b) => toAmount(b.actualSpend) - toAmount(a.actualSpend) || toAmount(b.budget) - toAmount(a.budget));
+            const totalBudget = reportTasks.reduce((sum, task) => sum + toAmount(task.budget), 0);
+            const totalActual = reportTasks.reduce((sum, task) => sum + toAmount(task.actualSpend), 0);
+            const remaining = totalBudget - totalActual;
+            const utilization = totalBudget ? Math.round((totalActual / totalBudget) * 100) : null;
+            const monthDate = new Date(`${month}-01T00:00:00`);
+
+            document.getElementById('financial-report-period').innerText = monthDate.toLocaleDateString('ar-DZ', { year: 'numeric', month: 'long' });
+            document.getElementById('financial-report-generated').innerText = new Date().toLocaleDateString('ar-DZ', { year: 'numeric', month: 'long', day: 'numeric' });
+            document.querySelector('#financial-report-paper .report-caption').innerText =
+                'النطاق: المهام ذات الموعد النهائي داخل الشهر المحدد. الإنفاق الفعلي هو إجمالي الإنفاق المسجل حالياً لكل مهمة، وليس حركة مالية مؤرخة بالشهر.';
+            document.getElementById('financial-report-count').innerText = `${reportTasks.length} بند مصروف`;
+
+            const metricData = [
+                { label: 'إجمالي الميزانية', value: `${formatAmount(totalBudget)} DZD`, color: 'text-cyan-800' },
+                { label: 'الإنفاق الفعلي المسجل', value: `${formatAmount(totalActual)} DZD`, color: 'text-indigo-800' },
+                { label: remaining >= 0 ? 'المتبقي من الميزانية' : 'تجاوز الميزانية', value: `${formatAmount(Math.abs(remaining))} DZD`, color: remaining >= 0 ? 'text-emerald-800' : 'text-rose-800' },
+                { label: 'نسبة الإنفاق', value: utilization === null ? 'لا توجد ميزانية مرصودة' : `${utilization}%`, color: 'text-amber-800' }
+            ];
+            document.getElementById('financial-report-metrics').innerHTML = metricData.map(metric => `
+                <div class="report-metric rounded-2xl border border-slate-200 bg-slate-50 p-3 md:p-4">
+                    <p class="text-[10px] font-bold text-slate-500">${metric.label}</p>
+                    <p class="mt-2 text-sm font-black ${metric.color} md:text-lg">${metric.value}</p>
+                </div>`).join('');
+
+            document.getElementById('financial-report-rows').innerHTML = reportTasks.length
+                ? reportTasks.map((task, index) => {
+                    const budget = toAmount(task.budget);
+                    const actual = toAmount(task.actualSpend);
+                    const delta = budget - actual;
+                    return `<tr>
+                        <td>${index + 1}</td>
+                        <td dir="ltr">${escapeHTML(task.id)}</td>
+                        <td class="font-bold">${escapeHTML(task.name)}</td>
+                        <td>${escapeHTML(task.department || '-')}</td>
+                        <td dir="ltr">${formatAmount(budget)}</td>
+                        <td dir="ltr">${formatAmount(actual)}</td>
+                        <td dir="ltr" class="${delta >= 0 ? 'text-emerald-700' : 'text-rose-700'}">${delta < 0 ? '-' : ''}${formatAmount(Math.abs(delta))}</td>
+                    </tr>`;
+                }).join('')
+                : '<tr><td colspan="7" class="py-8 text-center text-slate-500">لا توجد مصاريف مسجلة لمهام تستحق في هذا الشهر.</td></tr>';
+
+            document.getElementById('financial-report-totals').innerHTML = reportTasks.length
+                ? `<tr class="bg-slate-100 font-black"><td colspan="4">الإجمالي</td><td dir="ltr">${formatAmount(totalBudget)}</td><td dir="ltr">${formatAmount(totalActual)}</td><td dir="ltr">${remaining < 0 ? '-' : ''}${formatAmount(Math.abs(remaining))}</td></tr>`
+                : '';
+
+            const byDepartment = new Map();
+            reportTasks.forEach(task => {
+                const department = task.department || 'غير محدد';
+                const entry = byDepartment.get(department) || { count: 0, budget: 0, actual: 0 };
+                entry.count += 1;
+                entry.budget += toAmount(task.budget);
+                entry.actual += toAmount(task.actualSpend);
+                byDepartment.set(department, entry);
+            });
+            const departments = [...byDepartment.entries()].sort((a, b) => b[1].actual - a[1].actual);
+            document.getElementById('financial-report-departments').innerHTML = departments.length
+                ? departments.map(([department, totals], index) => {
+                    const deptRemaining = totals.budget - totals.actual;
+                    const deptUtilization = totals.budget ? `${Math.round((totals.actual / totals.budget) * 100)}%` : '—';
+                    return `<tr>
+                        <td>${index + 1}</td>
+                        <td class="font-bold">${escapeHTML(department)}</td>
+                        <td>${totals.count}</td>
+                        <td dir="ltr">${formatAmount(totals.budget)}</td>
+                        <td dir="ltr">${formatAmount(totals.actual)}</td>
+                        <td dir="ltr">${deptRemaining < 0 ? '-' : ''}${formatAmount(Math.abs(deptRemaining))}</td>
+                        <td>${deptUtilization}</td>
+                    </tr>`;
+                }).join('')
+                : '<tr><td colspan="7" class="py-8 text-center text-slate-500">لا توجد بيانات مالية لتصنيفها.</td></tr>';
+        }
+
+        function exportData(format) {
+            if (appState.tasks.length === 0) return showToast('لا توجد بيانات للتصدير', 'warning');
+            if (format === 'json') {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState, null, 2));
+                const a = document.createElement('a'); a.href = dataStr;
+                a.download = `Task_Tracker_3.0_Backup_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                showToast('تم تصدير نسخة JSON الاحتياطية', 'success');
+            } else if (format === 'csv') {
+                let csvContent = "\uFEFFID,Task Name,Department,Work Type,Location,Owner,Priority,Status,Deadline,Progress %,Budget DZD,Actual Spend DZD\n";
+                appState.tasks.forEach(t => {
+                    csvContent += `"${t.id}","${t.name}","${t.department}","${t.workType || ''}","${t.location || ''}","${t.owner}","${t.priority}","${t.status}","${t.deadline || ''}","${t.progress}","${t.budget}","${t.actualSpend}"\n`;
+                });
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+                a.download = `Task_Tracker_3.0_Report_${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+                showToast('تم تصدير تقرير CSV بنجاح', 'success');
+            }
+        }
+
+        function importJSONData(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    const imported = JSON.parse(evt.target.result);
+                    if (imported && Array.isArray(imported.tasks)) {
+                        appState.tasks = imported.tasks;
+                        appState.lookups = normalizeLookups(imported.lookups);
+                        logActivity('استيراد بيانات', `استيراد ملف بيانات خارجي (${imported.tasks.length} مهمة)`);
+                        saveToLocalStorage(); populateSelectDropdowns(); renderAllViews();
+                        showToast('تم استيراد البيانات بنجاح!', 'success');
+                    }
+                } catch (err) { showToast('حدث خطأ أثناء استيراد البيانات.', 'error'); }
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
